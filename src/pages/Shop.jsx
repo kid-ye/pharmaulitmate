@@ -196,7 +196,7 @@ const CATEGORIES = [
   "Clinical Components",
 ];
 
-const Shop = () => {
+const Shop = ({ onAddToCart }) => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortOrder, setSortOrder] = useState("Featured");
   const [currentPage, setCurrentPage] = useState(1);
@@ -451,8 +451,8 @@ const Shop = () => {
                     Notify Me
                   </button>
                 ) : (
-                  <button className="btn-primary full-width">
-                    Add to Cart - Rs.{selectedProduct.price * qty}
+                  <button className="btn-primary full-width" onClick={() => { onAddToCart(selectedProduct, qty); closeModal(); }}>
+                    Add to Cart — Rs.{selectedProduct.price * qty}
                   </button>
                 )}
 

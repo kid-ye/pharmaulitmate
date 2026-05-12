@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { LockKeyhole, Mail, ShieldCheck } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { ADMIN_EMAIL, BRAND_NAME } from '../../constants';
 import './Login.css';
 
@@ -8,86 +8,103 @@ const ADMIN_PASSWORD = 'admin123';
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState(ADMIN_EMAIL);
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [shake, setShake] = useState(false);
+  const passwordRef = useRef(null);
 
   useEffect(() => {
     document.body.classList.add('admin-body');
-    return () => {
-      document.body.classList.remove('admin-body');
-    };
+    passwordRef.current?.focus();
+    return () => document.body.classList.remove('admin-body');
   }, []);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setLoading(true);
 
-    if (email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
-      setError('');
-      onLogin();
-      return;
-    }
-
-    setError('Invalid admin email or password.');
+    setTimeout(() => {
+      if (email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
+        setError('');
+        onLogin();
+      } else {
+        setError('Invalid admin email or password.');
+        setLoading(false);
+        setShake(true);
+        setTimeout(() => setShake(false), 500);
+      }
+    }, 600);
   };
 
   return (
     <main className="admin-login-page">
-      <section className="login-shell">
-        <div className="login-brand-panel">
-          <div className="login-mark">
-            <ShieldCheck size={28} />
-          </div>
+      <div className="login-image-panel">
+        <img src="/images/hero-clinical-kits.svg" alt="" aria-hidden="true" />
+        <div className="login-image-overlay">
           <span className="login-eyebrow">Admin Access</span>
-          <h1>{BRAND_NAME} dashboard</h1>
-          <p>
-            Sign in to manage medical kits, orders, inventory, and customer support from one protected workspace.
-          </p>
-          <div className="login-hint">
-            <span>Demo email</span>
-            <strong>{ADMIN_EMAIL}</strong>
-            <span>Password</span>
-            <strong>{ADMIN_PASSWORD}</strong>
-          </div>
+          <h2>{BRAND_NAME}</h2>
+          <p>Manage kits, orders &amp; inventory from one protected workspace.</p>
         </div>
+      </div>
 
-        <form className="login-form-panel" onSubmit={handleSubmit}>
+      <section className={`login-shell login-enter ${shake ? 'login-shake' : ''}`}>
+        <form className="login-form-panel" onSubmit={handleSubmit} noValidate>
           <div>
             <span className="login-eyebrow">Secure Login</span>
             <h2>Welcome back</h2>
           </div>
 
-          <label className="login-field">
-            Email
+          <div className="login-field">
+            <label htmlFor="admin-email">Email</label>
             <span className="login-input-wrap">
-              <Mail size={18} />
+              <Mail size={18} aria-hidden="true" />
               <input
+                id="admin-email"
                 type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 autoComplete="username"
+                aria-describedby={error ? 'login-error-msg' : undefined}
                 required
               />
             </span>
-          </label>
+          </div>
 
-          <label className="login-field">
-            Password
+          <div className="login-field">
+            <label htmlFor="admin-password">Password</label>
             <span className="login-input-wrap">
-              <LockKeyhole size={18} />
+              <LockKeyhole size={18} aria-hidden="true" />
               <input
-                type="password"
+                id="admin-password"
+                ref={passwordRef}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 autoComplete="current-password"
                 placeholder="Enter password"
+                aria-describedby={error ? 'login-error-msg' : undefined}
                 required
               />
+              <button
+                type="button"
+                className="login-eye-toggle"
+                onClick={() => setShowPassword((v) => !v)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+              </button>
             </span>
-          </label>
+          </div>
 
-          {error && <p className="login-error">{error}</p>}
+          {error && (
+            <p id="login-error-msg" className="login-error" role="alert" aria-live="polite">
+              {error}
+            </p>
+          )}
 
-          <button type="submit" className="login-submit">
-            Enter Dashboard
+          <button type="submit" className="login-submit" disabled={loading}>
+            {loading ? <span className="login-spinner" /> : 'Enter Dashboard'}
           </button>
         </form>
       </section>

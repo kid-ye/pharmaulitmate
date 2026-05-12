@@ -4,7 +4,7 @@ import { ShoppingBag, Search, Menu, X, Cross, UserCog } from 'lucide-react';
 import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from '../constants';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ cartCount = 0 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
@@ -83,7 +83,7 @@ const Navbar = () => {
             </button>
             <Link to="/cart" className="icon-btn cart-btn" aria-label="Cart">
               <ShoppingBag size={20} />
-              <span className="cart-badge">0</span>
+              <span className="cart-badge">{cartCount}</span>
             </Link>
           </div>
         </div>

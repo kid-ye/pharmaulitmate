@@ -65,12 +65,12 @@
   top: 3rem;
 }
 
-/* Quick Shop Button */
+/* Add to Cart hover button */
 .quick-shop-btn {
   position: absolute;
   bottom: -50px; left: 1rem; right: 1rem;
-  background-color: var(--surface);
-  color: var(--text);
+  background-color: var(--accent);
+  color: #fff;
   padding: 0.8rem;
   border-radius: 4px;
   font-weight: 500;
@@ -79,9 +79,20 @@
   text-align: center;
 }
 .product-card:hover .quick-shop-btn { bottom: 1rem; }
-.quick-shop-btn:hover { background-color: var(--accent); color: #fff; }
+.quick-shop-btn:hover { background-color: #a3552f; }
 
-/* Product Info */
+/* Notify Me (sold out) */
+.btn-add-cart.disabled {
+  width: 100%;
+  border: 1px solid #f0edea;
+  background-color: #f0edea;
+  color: var(--muted);
+  padding: 0.6rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: not-allowed;
+  margin-top: 0.5rem;
+}
 .product-info {
   padding: 1.5rem 1.5rem 0;
   text-align: center;
@@ -133,24 +144,3 @@
   text-decoration: line-through;
 }
 
-/* Add to Cart */
-.btn-add-cart {
-  width: 100%;
-  border: 1px solid var(--gold);
-  background: transparent;
-  color: var(--text);
-  padding: 0.6rem;
-  border-radius: 4px;
-  font-size: 0.9rem;
-}
-.btn-add-cart:hover {
-  background-color: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-.btn-add-cart.disabled {
-  background-color: #f0edea;
-  border-color: #f0edea;
-  color: var(--muted);
-  cursor: not-allowed;
-}

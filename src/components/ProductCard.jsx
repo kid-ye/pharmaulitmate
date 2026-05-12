@@ -41,7 +41,7 @@ const ProductCard = ({
           <img src={imageSecondary} alt={name} className="img-secondary" />
         </div>
 
-        <button className="quick-shop-btn" onClick={onQuickShop}>Quick Shop</button>
+        {!isSoldOut && <button className="quick-shop-btn" onClick={onQuickShop}>Add to Cart</button>}
       </div>
 
       <div className="product-info">
@@ -57,11 +57,7 @@ const ProductCard = ({
           <span className="product-price">Rs.{price}</span>
           {originalPrice && <span className="product-price-old">Rs.{originalPrice}</span>}
         </div>
-        {isSoldOut ? (
-          <button className="btn-add-cart disabled" disabled>Notify Me</button>
-        ) : (
-          <button className="btn-add-cart">Add to Cart</button>
-        )}
+        {isSoldOut && <button className="btn-add-cart disabled" disabled>Notify Me</button>}
       </div>
     </div>
   );

@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 // Pages
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
+import Cart from "./pages/Cart";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -53,12 +54,17 @@ function FadeUpObserver() {
 }
 
 // Customer Layout
-const CustomerLayout = ({ children }) => {
+const CustomerLayout = ({ children, cart, toast }) => {
   return (
     <div className="app-wrapper">
-      <Navbar />
+      <Navbar cartCount={cart.reduce((n, i) => n + i.qty, 0)} />
       <main>{children}</main>
       <Footer />
+      {toast && (
+        <div className="cart-toast">
+          <span>✓</span> <strong>{toast}</strong> added to cart
+        </div>
+      )}
     </div>
   );
 };
@@ -87,6 +93,50 @@ const AdminRoute = () => {
 
 // Main App Component
 function App() {
+  const [cart, setCart] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem('pharma-cart')) ?? [];
+    } catch {
+      return [];
+    }
+  });
+  const [toast, setToast] = useState('');
+
+  const saveCart = (updated) => {
+    setCart(updated);
+    sessionStorage.setItem('pharma-cart', JSON.stringify(updated));
+  };
+
+  const addToCart = (product, qty) => {
+    setCart((prev) => {
+      const existing = prev.find((i) => i.id === product.id);
+      const updated = existing
+        ? prev.map((i) => i.id === product.id ? { ...i, qty: i.qty + qty } : i)
+        : [...prev, { id: product.id, name: product.name, category: product.category, price: product.price, image: product.image1, qty }];
+      sessionStorage.setItem('pharma-cart', JSON.stringify(updated));
+      return updated;
+    });
+    setToast(product.name);
+    setTimeout(() => setToast(''), 2500);
+  };
+
+  const updateQty = (id, qty) => {
+    if (qty < 1) return;
+    setCart((prev) => {
+      const updated = prev.map((i) => i.id === id ? { ...i, qty } : i);
+      sessionStorage.setItem('pharma-cart', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const removeFromCart = (id) => {
+    setCart((prev) => {
+      const updated = prev.filter((i) => i.id !== id);
+      sessionStorage.setItem('pharma-cart', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
     <Router>
       <ScrollToTop />
@@ -99,10 +149,11 @@ function App() {
         <Route
           path="/*"
           element={
-            <CustomerLayout>
+            <CustomerLayout cart={cart} toast={toast}>
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
+                <Route path="/shop" element={<Shop onAddToCart={addToCart} />} />
+                <Route path="/cart" element={<Cart cart={cart} onUpdateQty={updateQty} onRemove={removeFromCart} />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
               </Routes>
