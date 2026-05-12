@@ -1,16 +1,68 @@
-# React + Vite
+# Pharmer Storefront
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React and Vite single-page application for a medical kits storefront with a demo admin dashboard.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- Vite 8
+- React Router
+- Recharts
+- Lucide React
+- ESLint
 
-## React Compiler
+## Routes
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `/` - storefront home page
+- `/shop` - product listing and quick shop modal
+- `/about` - project and store information
+- `/contact` - contact form and support information
+- `/admin` - protected demo admin area
 
-## Expanding the ESLint configuration
+## Admin Demo Login
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```text
+Email: admin@Pharmer.com
+Password: admin123
+```
+
+Authentication is client-side only and stored in `localStorage`. It is intended for demo use, not production security.
+
+## Setup
+
+```powershell
+npm install
+npm run dev
+```
+
+On Windows PowerShell, if script execution blocks `npm`, use:
+
+```powershell
+npm.cmd install
+npm.cmd run dev
+```
+
+The development server runs at:
+
+```text
+http://localhost:5173/
+```
+
+## Scripts
+
+```powershell
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
+
+## Project Structure
+
+```text
+public/images/          Static SVG product and page assets
+src/components/         Shared layout and product components
+src/pages/              Storefront pages
+src/pages/admin/        Admin login, dashboard, styles, and demo data
+src/constants.js        Shared brand and commerce constants
+```
