@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Medicine organizer pack</title>
+  <desc id="desc">Medicine organizer with bottles and labeled compartments.</desc>
+  <rect width="900" height="900" fill="#f0f6f4"/>
+  <rect x="185" y="275" width="530" height="330" rx="42" fill="#ffffff"/>
+  <rect x="245" y="345" width="120" height="82" rx="18" fill="#d84b4b" opacity=".85"/>
+  <rect x="390" y="345" width="120" height="82" rx="18" fill="#9fd0cf"/>
+  <rect x="535" y="345" width="120" height="82" rx="18" fill="#eac9ba"/>
+  <rect x="245" y="455" width="120" height="82" rx="18" fill="#9fd0cf"/>
+  <rect x="390" y="455" width="120" height="82" rx="18" fill="#eac9ba"/>
+  <rect x="535" y="455" width="120" height="82" rx="18" fill="#d84b4b" opacity=".85"/>
+  <rect x="285" y="220" width="82" height="155" rx="28" fill="#ffffff"/>
+  <rect x="305" y="275" width="42" height="55" rx="12" fill="#d84b4b"/>
+</svg>

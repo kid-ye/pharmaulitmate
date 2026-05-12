@@ -19,13 +19,13 @@ const Footer = () => {
             <a href="#" aria-label="Pinterest">Pinterest</a>
           </div>
         </div>
-        
+
         <div className="footer-col">
           <h4 className="footer-title">Navigate</h4>
           <Link to="/">Home</Link>
           <Link to="/shop">Shop Collection</Link>
           <Link to="/about">Our Story</Link>
-          <Link to="/journal">Journal</Link>
+          <Link to="/kits">Medical Kits</Link>
         </div>
 
         <div className="footer-col">
@@ -44,7 +44,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} {BRAND_NAME}. Made with 💛 in India.</p>
+        <p>&copy; {new Date().getFullYear()} {BRAND_NAME}. Made in India.</p>
       </div>
     </footer>
   );

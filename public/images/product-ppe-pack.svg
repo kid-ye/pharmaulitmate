@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">PPE pack</title>
+  <desc id="desc">A PPE pack with mask, gloves, and sanitizer bottle.</desc>
+  <rect width="900" height="900" fill="#edf7f6"/>
+  <rect x="180" y="230" width="540" height="440" rx="48" fill="#ffffff"/>
+  <path d="M280 390 C350 330 520 330 590 390 L590 500 C520 560 350 560 280 500 Z" fill="#9fd0cf"/>
+  <path d="M335 415 h200 M335 465 h200" stroke="#ffffff" stroke-width="20" stroke-linecap="round"/>
+  <path d="M230 430 C190 430 190 505 240 505 M640 430 C690 430 690 505 640 505" fill="none" stroke="#5a7378" stroke-width="18" stroke-linecap="round"/>
+  <rect x="585" y="250" width="86" height="175" rx="28" fill="#f7fbfb"/>
+  <rect x="606" y="305" width="44" height="70" rx="14" fill="#d84b4b"/>
+</svg>

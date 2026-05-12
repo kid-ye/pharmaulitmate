@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Diagnostic kit</title>
+  <desc id="desc">Stethoscope, pulse oximeter, and thermometer in a diagnostic kit.</desc>
+  <rect width="900" height="900" fill="#eef5fb"/>
+  <rect x="175" y="205" width="350" height="470" rx="42" fill="#ffffff"/>
+  <rect x="225" y="270" width="250" height="170" rx="26" fill="#dbeaec"/>
+  <path d="M305 350 h90 M350 305 v90" stroke="#d84b4b" stroke-width="34" stroke-linecap="round"/>
+  <path d="M550 270 C445 400 485 630 650 625 C760 622 798 520 748 445" fill="none" stroke="#2f5960" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="750" cy="445" r="60" fill="#fff" stroke="#2f5960" stroke-width="24"/>
+  <circle cx="750" cy="445" r="22" fill="#d84b4b"/>
+</svg>

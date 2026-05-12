@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Emergency response hamper</title>
+  <desc id="desc">Emergency medical hamper with first aid, wraps, bottles, and rescue supplies.</desc>
+  <rect width="900" height="900" fill="#f7f1ed"/>
+  <rect x="175" y="320" width="550" height="300" rx="52" fill="#ffffff"/>
+  <rect x="240" y="250" width="420" height="145" rx="54" fill="none" stroke="#765c52" stroke-width="32"/>
+  <rect x="255" y="405" width="150" height="44" rx="7" fill="#d84b4b"/>
+  <rect x="308" y="352" width="44" height="150" rx="7" fill="#d84b4b"/>
+  <rect x="455" y="385" width="95" height="165" rx="30" fill="#e5f2f2"/>
+  <rect x="580" y="395" width="75" height="155" rx="28" fill="#9fd0cf"/>
+</svg>

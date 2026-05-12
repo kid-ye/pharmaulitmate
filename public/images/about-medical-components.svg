@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Medical kit components</title>
+  <desc id="desc">A clean top-down layout of medical components including gauze, sanitizer, thermometer, and gloves.</desc>
+  <rect width="900" height="1100" fill="#edf6f6"/>
+  <circle cx="120" cy="120" r="210" fill="#d84b4b" opacity=".08"/>
+  <circle cx="780" cy="950" r="260" fill="#2c9d9a" opacity=".12"/>
+  <rect x="125" y="160" width="650" height="780" rx="54" fill="#ffffff"/>
+  <rect x="195" y="240" width="235" height="180" rx="28" fill="#dbeaec"/>
+  <rect x="470" y="240" width="235" height="180" rx="28" fill="#f2ded4"/>
+  <rect x="195" y="470" width="510" height="105" rx="32" fill="#2f5960"/>
+  <rect x="250" y="505" width="400" height="34" rx="17" fill="#9ed0cf"/>
+  <rect x="210" y="640" width="130" height="215" rx="42" fill="#f7fbfb"/>
+  <rect x="235" y="700" width="80" height="92" rx="20" fill="#d84b4b"/>
+  <rect x="390" y="640" width="130" height="215" rx="42" fill="#e8f2f2"/>
+  <rect x="415" y="700" width="80" height="92" rx="20" fill="#7bbec0"/>
+  <rect x="570" y="640" width="130" height="215" rx="42" fill="#f7fbfb"/>
+  <rect x="595" y="700" width="80" height="92" rx="20" fill="#d84b4b"/>
+  <path d="M275 315 h75 v25 h-75 zM300 290 h25 v75 h-25 z" fill="#d84b4b"/>
+  <path d="M548 305 C586 278 635 304 635 350 C635 396 572 405 548 438 C524 405 460 396 460 350 C460 304 510 278 548 305 Z" fill="#d84b4b"/>
+</svg>

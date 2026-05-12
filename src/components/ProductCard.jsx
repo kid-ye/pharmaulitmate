@@ -54,8 +54,8 @@ const ProductCard = ({
           </div>
         )}
         <div className="product-price-row">
-          <span className="product-price">₹{price}</span>
-          {originalPrice && <span className="product-price-old">₹{originalPrice}</span>}
+          <span className="product-price">Rs.{price}</span>
+          {originalPrice && <span className="product-price-old">Rs.{originalPrice}</span>}
         </div>
         {isSoldOut ? (
           <button className="btn-add-cart disabled" disabled>Notify Me</button>

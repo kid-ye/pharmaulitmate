@@ -115,7 +115,28 @@
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+.admin-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(194, 103, 58, 0.35);
+  color: var(--text);
+  background: rgba(253, 250, 246, 0.72);
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.admin-login-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
 }
 
 .icon-btn {
@@ -182,5 +203,16 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+  }
+
+  .admin-login-btn span {
+    display: none;
+  }
+
+  .admin-login-btn {
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+    padding: 0;
   }
 }

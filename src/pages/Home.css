@@ -269,10 +269,10 @@
 
 
 
-/* Self Care Banner */
+/* Medical Kit Banner */
 .self-care-banner {
   height: 520px;
-  background-image: url('https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=2000');
+  background-image: url('/images/banner-medical-kit.svg');
   background-attachment: fixed;
   background-size: cover;
   background-position: center;

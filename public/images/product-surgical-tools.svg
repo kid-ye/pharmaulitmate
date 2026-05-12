@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Surgical tools kit</title>
+  <desc id="desc">Organized stainless medical tools and sterile supplies in a kit.</desc>
+  <rect width="900" height="900" fill="#f4f7f8"/>
+  <rect x="170" y="230" width="560" height="430" rx="52" fill="#ffffff"/>
+  <rect x="235" y="300" width="430" height="80" rx="24" fill="#dcebec"/>
+  <path d="M280 340 h320" stroke="#5a7378" stroke-width="18" stroke-linecap="round"/>
+  <path d="M300 455 h260 M300 515 h260" stroke="#91bfc2" stroke-width="28" stroke-linecap="round"/>
+  <circle cx="625" cy="455" r="42" fill="none" stroke="#d84b4b" stroke-width="18"/>
+  <circle cx="625" cy="515" r="42" fill="none" stroke="#d84b4b" stroke-width="18"/>
+</svg>

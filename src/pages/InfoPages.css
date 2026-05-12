@@ -1,0 +1,267 @@
+.info-page {
+  padding-top: 100px;
+  background-color: var(--bg);
+}
+
+.info-hero {
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  background-color: var(--bg);
+  overflow: hidden;
+}
+
+.about-hero {
+  background: linear-gradient(135deg, #f7f0e6 0%, #edf6f6 52%, #e5d1c5 100%);
+}
+
+.contact-hero {
+  background: linear-gradient(135deg, #f7f0e6 0%, #eaf4f3 56%, #d8e8f2 100%);
+}
+
+.info-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.75fr);
+  align-items: center;
+  gap: 4rem;
+}
+
+.info-hero-copy h1 {
+  font-size: 76px;
+  line-height: 1.02;
+  margin-bottom: 1.5rem;
+}
+
+.info-hero-copy p {
+  max-width: 620px;
+  color: var(--text);
+  font-size: 1.08rem;
+}
+
+.info-hero-media {
+  min-height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-hero-media img {
+  width: min(100%, 420px);
+  max-height: 520px;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 24px 60px rgba(46, 55, 56, 0.16);
+}
+
+.split-section {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.split-copy h2,
+.contact-panel h2 {
+  font-size: 48px;
+  line-height: 1.08;
+  margin-bottom: 0;
+}
+
+.split-text p {
+  margin-top: 0;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.info-section-header {
+  margin-bottom: 2rem;
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.value-card,
+.contact-panel,
+.detail-card,
+.detail-row {
+  background: #fff;
+  border: 1px solid rgba(191, 160, 106, 0.18);
+  border-radius: 8px;
+}
+
+.value-card {
+  padding: 2rem;
+}
+
+.value-icon,
+.detail-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(194, 103, 58, 0.12);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.value-card h3,
+.detail-card h3 {
+  font-size: 28px;
+  margin: 1.2rem 0 0.7rem;
+}
+
+.value-card p,
+.detail-card p,
+.detail-row p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.care-strip {
+  max-width: 760px;
+  text-align: center;
+}
+
+.care-strip svg {
+  color: var(--gold);
+  margin-bottom: 1rem;
+}
+
+.care-strip h2 {
+  font-size: 48px;
+  margin-bottom: 1rem;
+}
+
+.care-strip p {
+  color: rgba(247, 240, 230, 0.78);
+  margin-bottom: 2rem;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(300px, 0.9fr);
+  gap: 2rem;
+  align-items: start;
+}
+
+.contact-panel {
+  padding: 2.5rem;
+}
+
+.contact-form {
+  display: grid;
+  gap: 1.1rem;
+  margin-top: 2rem;
+}
+
+.contact-form label {
+  display: grid;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  width: 100%;
+  border: 1px solid rgba(154, 143, 133, 0.28);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 4px;
+  padding: 0.9rem 1rem;
+  font-size: 1rem;
+  outline: none;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(194, 103, 58, 0.1);
+}
+
+.contact-details {
+  display: grid;
+  gap: 1rem;
+}
+
+.detail-card {
+  padding: 2rem;
+}
+
+.location-card {
+  background: #282828;
+  color: #fff;
+  border-color: #282828;
+}
+
+.location-card h3 {
+  color: #fff;
+}
+
+.location-card svg {
+  color: var(--gold);
+}
+
+.detail-row {
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.detail-row span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 900px) {
+  .info-hero-grid,
+  .split-section,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-hero {
+    min-height: auto;
+    padding: 4rem 0;
+  }
+
+  .info-hero-copy h1 {
+    font-size: 54px;
+  }
+
+  .info-hero-media {
+    min-height: auto;
+  }
+
+  .value-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .info-page {
+    padding-top: 96px;
+  }
+
+  .info-hero-copy h1,
+  .split-copy h2,
+  .contact-panel h2,
+  .care-strip h2 {
+    font-size: 40px;
+  }
+
+  .contact-panel {
+    padding: 1.5rem;
+  }
+}

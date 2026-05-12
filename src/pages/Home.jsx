@@ -6,37 +6,38 @@ import './Home.css';
 
 const slides = [
   {
-    image: "https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=2000",
-    tag: "New Arrival ✦ 2025",
-    title: "Your Journey to Becoming Starts Here",
-    subtitle: "Embrace the process with our handcrafted planners and journals."
+    image: '/images/hero-clinical-kits.svg',
+    tag: 'New Arrival',
+    title: 'Medical Kits for Everyday Care',
+    subtitle: 'Organized first aid, diagnostic, and home care essentials for fast, confident response.',
   },
   {
-    image: "https://images.unsplash.com/photo-1505330622279-bf7d7fc918f4?auto=format&fit=crop&q=80&w=2000",
-    tag: "Mindful Living",
-    title: "Self Care Isn't Selfish. It's Sacred.",
-    subtitle: "Carve out time for yourself with intention and beauty."
+    image: '/images/hero-diagnostics.svg',
+    tag: 'Diagnostics',
+    title: 'Reliable Components, Ready to Use',
+    subtitle: 'Shop practical thermometers, oximeters, stethoscopes, PPE, and clinical supply packs.',
   },
   {
-    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&q=80&w=2000",
-    tag: "Workspace Essentials",
-    title: "Calm Corners, Bold Ambitions.",
-  }
+    image: '/images/hero-emergency-care.svg',
+    tag: 'Emergency Preparedness',
+    title: 'Care Kits Built for Urgent Moments',
+    subtitle: 'Compact emergency kits for homes, clinics, workplaces, and travel.',
+  },
 ];
 
 const products = [
-  { id: 1, name: "Balance Baby Balance 2025 Planner", price: 1299, originalPrice: 1799, discount: null, isNew: false, image1: "https://picsum.photos/seed/planner1a/600/800", image2: "https://picsum.photos/seed/planner1b/600/800" },
-  { id: 2, name: "Feel Your Feelings Guided Journal", price: 849, originalPrice: 1299, discount: 34, isNew: false, image1: "https://picsum.photos/seed/journal1a/600/800", image2: "https://picsum.photos/seed/journal1b/600/800" },
-  { id: 3, name: "Calm Corners of India Coloring Book", price: 399, originalPrice: 699, discount: 42, isNew: false, image1: "https://picsum.photos/seed/color1a/600/800", image2: "https://picsum.photos/seed/color1b/600/800" },
-  { id: 4, name: "The Ultimate Unwinding Kit", price: 1999, originalPrice: null, discount: null, isNew: true, image1: "https://picsum.photos/seed/kit1a/600/800", image2: "https://picsum.photos/seed/kit1b/600/800" },
-  { id: 5, name: "The Becoming Hamper", price: 2499, originalPrice: null, discount: null, isNew: false, image1: "https://picsum.photos/seed/hamper1a/600/800", image2: "https://picsum.photos/seed/hamper1b/600/800" },
-  { id: 6, name: "Affirmation Cards Deck", price: 599, originalPrice: null, discount: null, isNew: false, image1: "https://picsum.photos/seed/cards1a/600/800", image2: "https://picsum.photos/seed/cards1b/600/800" }
+  { id: 1, name: 'Complete First Aid Kit', price: 1299, originalPrice: 1799, discount: null, isNew: false, image1: '/images/product-first-aid-kit.svg', image2: '/images/product-emergency-hamper.svg' },
+  { id: 2, name: 'Diagnostic Essentials Kit', price: 999, originalPrice: 1299, discount: 23, isNew: false, image1: '/images/product-diagnostic-kit.svg', image2: '/images/product-home-care-kit.svg' },
+  { id: 3, name: 'Wound Care Components Set', price: 849, originalPrice: 1299, discount: 34, isNew: false, image1: '/images/product-wound-care.svg', image2: '/images/product-first-aid-kit.svg' },
+  { id: 4, name: 'PPE Safety Pack', price: 699, originalPrice: 999, discount: 30, isNew: true, image1: '/images/product-ppe-pack.svg', image2: '/images/product-surgical-tools.svg' },
+  { id: 5, name: 'Emergency Response Hamper', price: 2499, originalPrice: null, discount: null, isNew: false, image1: '/images/product-emergency-hamper.svg', image2: '/images/product-first-aid-kit.svg' },
+  { id: 6, name: 'Medicine Organizer Pack', price: 599, originalPrice: null, discount: null, isNew: false, image1: '/images/product-medicine-pack.svg', image2: '/images/product-home-care-kit.svg' },
 ];
 
 const testimonials = [
-  { quote: "This planner changed how I approach my mornings.", name: "Priya S., Bangalore" },
-  { quote: "The coloring book is pure therapy. Gifted it to 5 friends.", name: "Ananya R., Mumbai" },
-  { quote: "The unwinding kit was the reset I needed.", name: "Meera K., Delhi" }
+  { quote: 'The first aid kit is neatly packed and easy to use during rushed moments.', name: 'Priya S., Bangalore' },
+  { quote: 'Our clinic restocked wound care components from here and the quality felt consistent.', name: 'Ananya R., Mumbai' },
+  { quote: 'The emergency hamper made our office medical shelf feel properly prepared.', name: 'Meera K., Delhi' },
 ];
 
 const Home = () => {
@@ -54,11 +55,10 @@ const Home = () => {
 
   return (
     <div className="home-page">
-      {/* Hero Slider */}
       <section className="hero-slider">
         {slides.map((slide, index) => (
           <div
-            key={index}
+            key={slide.title}
             className={`slide ${index === currentSlide ? 'active' : ''}`}
             style={{ backgroundImage: `url(${slide.image})` }}
           >
@@ -81,9 +81,9 @@ const Home = () => {
         <button className="slider-arrow right" onClick={nextSlide}><ChevronRight size={32} /></button>
 
         <div className="slider-dots">
-          {slides.map((_, i) => (
+          {slides.map((slide, i) => (
             <button
-              key={i}
+              key={slide.title}
               className={`dot ${i === currentSlide ? 'active' : ''}`}
               onClick={() => setCurrentSlide(i)}
             />
@@ -91,37 +91,34 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Marquee Strip */}
       <div className="gold-marquee">
         <div className="marquee-content-strip">
-          <span>Made in India ✦ Handmade Design ✦ Fueling Your Hustle ✦ Self Care First ✦ Balance is Everything ✦</span>
-          <span>Made in India ✦ Handmade Design ✦ Fueling Your Hustle ✦ Self Care First ✦ Balance is Everything ✦</span>
+          <span>Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast Delivery -</span>
+          <span>Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast Delivery -</span>
         </div>
       </div>
 
-      {/* About Section */}
       <section className="section bg-cream">
         <div className="container">
           <div className="about-grid">
             <div className="about-images fade-up">
-              <img src="https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?auto=format&fit=crop&q=80&w=800" alt="Journaling" className="img-main" />
-
+              <img src="/images/about-medical-components.svg" alt="Medical components arranged in a kit" className="img-main" />
             </div>
             <div className="about-text fade-up">
               <span className="eyebrow">Welcome to our</span>
               <h2 className="section-title">
-                World of BECOMING
+                Medical Supply Store
                 <svg className="squiggly" viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0 10 Q 25 20, 50 10 T 100 10 T 150 10 T 200 10" fill="transparent" stroke="var(--accent)" strokeWidth="3" />
                 </svg>
               </h2>
               <p className="body-text">
-                In a world that constantly rushes, we invite you to pause. We believe that true ambition is rooted in self-care. Our collections are thoughtfully designed to bring balance to your everyday life while honoring rich Indian wellness traditions.
+                We curate practical medical kits and components for homes, clinics, workplaces, and travel. Every product is selected to keep essential supplies visible, organized, and ready when care cannot wait.
               </p>
               <div className="stat-pills">
-                <span className="stat-pill">🌿 Made in India</span>
-                <span className="stat-pill">✦ Handmade</span>
-                <span className="stat-pill">💛 10,000+ Customers</span>
+                <span className="stat-pill">Made in India</span>
+                <span className="stat-pill">Clinic Ready</span>
+                <span className="stat-pill">10,000+ Customers</span>
               </div>
               <a href="/about" className="text-link text-accent">Discover Our Story &rarr;</a>
             </div>
@@ -129,7 +126,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
       <section className="section bg-surface">
         <div className="container">
           <div className="section-header fade-up">
@@ -138,7 +134,7 @@ const Home = () => {
           </div>
 
           <div className="product-grid">
-            {products.map(product => (
+            {products.map((product) => (
               <ProductCard
                 key={product.id}
                 className="fade-up"
@@ -156,45 +152,42 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Self-Care Banner */}
       <section className="self-care-banner">
         <div className="banner-overlay">
           <div className="container text-center fade-up">
-            <h2 className="banner-title">Your Ultimate Self Care — In a Box</h2>
-            <button className="btn-primary">Shop Self-Care Kits &rarr;</button>
+            <h2 className="banner-title">Complete Medical Care - In a Box</h2>
+            <button className="btn-primary">Shop Medical Kits &rarr;</button>
           </div>
         </div>
       </section>
 
-      {/* Join the Journey */}
       <section className="section bg-cream">
         <div className="container">
           <div className="about-grid reverse">
             <div className="about-text fade-up">
-              <span className="eyebrow">Community</span>
-              <h2 className="section-title">Join Us on This Journey</h2>
+              <span className="eyebrow">Prepared Care</span>
+              <h2 className="section-title">Prepared Care Starts Here</h2>
               <p className="body-text">
-                Your goals matter, and so does your peace of mind. Build a ritual that supports your ambition and grounds your spirit with our carefully crafted tools.
+                Build a supply shelf that is simple to check, quick to restock, and ready for everyday care needs. Choose from kits, components, and safety packs built for practical use.
               </p>
-              <button className="btn-primary" style={{ marginTop: '1.5rem' }}>Shop Planners &rarr;</button>
+              <button className="btn-primary" style={{ marginTop: '1.5rem' }}>Shop Medical Kits &rarr;</button>
             </div>
             <div className="about-images fade-up">
-              <img src="https://images.unsplash.com/photo-1522881451255-f59ad836fdf8?auto=format&fit=crop&q=80&w=800" alt="Community" className="img-main" />
-              <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&q=80&w=500" alt="Details" className="img-offset-left" />
+              <img src="/images/about-clinical-team.svg" alt="Medical supply kits prepared for delivery" className="img-main" />
+              <img src="/images/product-home-care-kit.svg" alt="Home care medical kit" className="img-offset-left" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="section bg-charcoal-section">
         <div className="container">
           <h2 className="text-center text-white fade-up" style={{ marginBottom: '3rem', fontSize: '2.5rem', fontFamily: 'var(--font-heading)' }}>
             What Our Community Says
           </h2>
           <div className="testimonials-grid">
-            {testimonials.map((test, i) => (
-              <div key={i} className="testimonial-card fade-up">
+            {testimonials.map((test) => (
+              <div key={test.name} className="testimonial-card fade-up">
                 <div className="stars">
                   <Star size={16} fill="var(--gold)" color="var(--gold)" />
                   <Star size={16} fill="var(--gold)" color="var(--gold)" />
@@ -203,29 +196,27 @@ const Home = () => {
                   <Star size={16} fill="var(--gold)" color="var(--gold)" />
                 </div>
                 <p className="quote">"{test.quote}"</p>
-                <p className="author">— {test.name}</p>
+                <p className="author">- {test.name}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Trust Strip */}
       <div className="trust-strip">
         <div className="container">
           <div className="trust-grid">
-            <div className="trust-item">🚚 Pan India Delivery</div>
-            <div className="trust-item">💬 Online Support</div>
-            <div className="trust-item">🎁 Free Shipping Above ₹{FREE_SHIPPING_THRESHOLD}</div>
-            <div className="trust-item">🌿 Made in India</div>
+            <div className="trust-item">Pan India Delivery</div>
+            <div className="trust-item">Online Support</div>
+            <div className="trust-item">Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</div>
+            <div className="trust-item">Made in India</div>
           </div>
         </div>
       </div>
 
-      {/* Newsletter */}
       <section className="newsletter-section">
         <div className="container text-center fade-up">
-          <h2 className="newsletter-title">Join the Becoming Community</h2>
+          <h2 className="newsletter-title">Get Medical Supply Updates</h2>
           <form className="newsletter-form-inline">
             <input type="email" placeholder="Enter your email" required />
             <button type="submit" className="btn-dark">Subscribe &rarr;</button>
