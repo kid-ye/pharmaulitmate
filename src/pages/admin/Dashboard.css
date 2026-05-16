@@ -1,12 +1,12 @@
 :root {
-  --admin-bg: #F5F8F8;
-  --admin-surface: #FFFFFF;
-  --admin-surface2: #EDF4F4;
-  --admin-border: #D8E3E3;
-  --admin-text: #21363A;
-  --admin-muted: #708286;
-  --admin-gold: #2F8F8B;
-  --admin-success: #2F9D68;
+  --admin-bg: #F7EEE9;
+  --admin-surface: #FDFAF8;
+  --admin-surface2: #F4C8C020;
+  --admin-border: #C8A98A;
+  --admin-text: #3D1220;
+  --admin-muted: #7A6460;
+  --admin-gold: #2D6A4F;
+  --admin-success: #2D6A4F;
   --admin-warning: #C78424;
   --admin-danger: #D95555;
   --admin-info: #3D7FC2;
@@ -32,7 +32,7 @@ body.admin-body {
 /* Sidebar */
 .admin-sidebar {
   width: 240px;
-  background-color: #FFFFFF;
+  background-color: var(--admin-surface);
   border-right: 1px solid var(--admin-border);
   display: flex;
   flex-direction: column;
@@ -91,12 +91,12 @@ body.admin-body {
 
 .nav-item:hover {
   color: var(--admin-text);
-  background-color: rgba(47, 143, 139, 0.08);
+  background-color: rgba(158, 64, 96, 0.06);
 }
 
 .nav-item.active {
   color: var(--admin-gold);
-  background-color: rgba(47, 143, 139, 0.12);
+  background-color: rgba(45, 106, 79, 0.1);
   border-left-color: var(--admin-gold);
 }
 
@@ -112,7 +112,7 @@ body.admin-body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: #DDEDED;
+  background-color: var(--peach, #F4C8C0);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -231,7 +231,7 @@ body.admin-body {
 .topbar-avatar {
   width: 32px; height: 32px;
   border-radius: 50%;
-  background-color: #DDEDED;
+  background-color: #F4C8C0;
   display: flex; justify-content: center; align-items: center;
   font-size: 12px; font-weight: bold;
 }
@@ -261,7 +261,7 @@ body.admin-body {
 }
 
 .kpi-card:hover {
-  border-color: rgba(47, 143, 139, 0.4);
+  border-color: rgba(45, 106, 79, 0.35);
 }
 
 .kpi-icon {
@@ -428,7 +428,7 @@ body.admin-body {
   color: var(--admin-text);
 }
 .admin-table tr:hover td {
-  background-color: #F7FBFB;
+  background-color: #FDF5F2;
 }
 
 .mono-text {
@@ -578,7 +578,7 @@ body.admin-body {
   background: var(--admin-gold); border: none; color: #fff;
   padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;
 }
-.btn-gold-filled:hover { background: #287b78; }
+.btn-gold-filled:hover { background: #1e4d38; }
 .btn-red-filled {
   background: var(--admin-danger); border: none; color: #fff;
   padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 500;

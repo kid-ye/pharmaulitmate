@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Clock, Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 import { BRAND_EMAIL, BRAND_HOURS, BRAND_PHONE } from '../constants';
+import { sendContact } from '../api/client';
 import './InfoPages.css';
 
 const contactMethods = [
@@ -9,6 +11,22 @@ const contactMethods = [
 ];
 
 const Contact = () => {
+  const [form, setForm] = useState({ name: '', email: '', topic: 'Medical kit guidance', message: '' });
+  const [status, setStatus] = useState('');
+
+  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await sendContact(form);
+      setStatus('Message sent! We will get back to you soon.');
+      setForm({ name: '', email: '', topic: 'Medical kit guidance', message: '' });
+    } catch (err) {
+      setStatus(err.message);
+    }
+  };
+
   return (
     <div className="info-page">
       <section className="info-hero contact-hero">
@@ -32,18 +50,18 @@ const Contact = () => {
           <div className="contact-panel fade-up">
             <span className="eyebrow">Contact Us</span>
             <h2>Send a message</h2>
-            <form className="contact-form">
+            <form className="contact-form" onSubmit={handleSubmit}>
               <label>
                 Name
-                <input type="text" name="name" placeholder="Your name" required />
+                <input type="text" name="name" placeholder="Your name" required value={form.name} onChange={handleChange} />
               </label>
               <label>
                 Email
-                <input type="email" name="email" placeholder="you@example.com" required />
+                <input type="email" name="email" placeholder="you@example.com" required value={form.email} onChange={handleChange} />
               </label>
               <label>
                 Topic
-                <select name="topic" defaultValue="Medical kit guidance">
+                <select name="topic" value={form.topic} onChange={handleChange}>
                   <option>Medical kit guidance</option>
                   <option>Bulk clinic order</option>
                   <option>Workplace safety supplies</option>
@@ -52,8 +70,9 @@ const Contact = () => {
               </label>
               <label>
                 Message
-                <textarea name="message" rows="5" placeholder="Tell us what you need..." required></textarea>
+                <textarea name="message" rows="5" placeholder="Tell us what you need..." required value={form.message} onChange={handleChange}></textarea>
               </label>
+              {status && <p style={{ fontSize: '14px', color: 'var(--accent)', marginBottom: '0.5rem' }}>{status}</p>}
               <button type="submit" className="btn-primary">Send Message</button>
             </form>
           </div>

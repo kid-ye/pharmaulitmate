@@ -18,7 +18,7 @@ main {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: #1e1b18;
+  background: var(--brand);
   color: #fff;
   padding: 0.85rem 1.4rem;
   border-radius: 8px;
@@ -32,6 +32,6 @@ main {
 }
 
 .cart-toast span {
-  color: #4caf7d;
+  color: var(--mint);
   font-size: 1rem;
 }

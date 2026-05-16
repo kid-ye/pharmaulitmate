@@ -12,11 +12,11 @@
 }
 
 .about-hero {
-  background: linear-gradient(135deg, #f7f0e6 0%, #edf6f6 52%, #e5d1c5 100%);
+  background: linear-gradient(135deg, #F7EEE9 0%, #D8ECD5 52%, #F4C8C0 100%);
 }
 
 .contact-hero {
-  background: linear-gradient(135deg, #f7f0e6 0%, #eaf4f3 56%, #d8e8f2 100%);
+  background: linear-gradient(135deg, #F7EEE9 0%, #D8ECD5 56%, #FDFAF8 100%);
 }
 
 .info-hero-grid {
@@ -87,8 +87,8 @@
 .contact-panel,
 .detail-card,
 .detail-row {
-  background: #fff;
-  border: 1px solid rgba(191, 160, 106, 0.18);
+  background: var(--surface);
+  border: 1px solid rgba(45, 106, 79, 0.15);
   border-radius: 8px;
 }
 
@@ -101,8 +101,8 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: rgba(194, 103, 58, 0.12);
-  color: var(--accent);
+  background: rgba(45, 106, 79, 0.1);
+  color: var(--gold);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -127,7 +127,7 @@
 }
 
 .care-strip svg {
-  color: var(--gold);
+  color: var(--peach);
   margin-bottom: 1rem;
 }
 
@@ -171,7 +171,7 @@
 .contact-form select,
 .contact-form textarea {
   width: 100%;
-  border: 1px solid rgba(154, 143, 133, 0.28);
+  border: 1px solid var(--tan);
   background: var(--surface);
   color: var(--text);
   border-radius: 4px;
@@ -184,7 +184,7 @@
 .contact-form select:focus,
 .contact-form textarea:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(194, 103, 58, 0.1);
+  box-shadow: 0 0 0 3px rgba(158, 64, 96, 0.1);
 }
 
 .contact-details {
@@ -197,9 +197,9 @@
 }
 
 .location-card {
-  background: #282828;
+  background: var(--brand);
   color: #fff;
-  border-color: #282828;
+  border-color: var(--brand);
 }
 
 .location-card h3 {
@@ -207,7 +207,7 @@
 }
 
 .location-card svg {
-  color: var(--gold);
+  color: var(--peach);
 }
 
 .detail-row {

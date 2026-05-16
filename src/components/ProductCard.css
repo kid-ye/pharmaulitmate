@@ -1,15 +1,17 @@
 /* Product Card Component */
 .product-card {
-  background: #fff;
+  background: var(--surface);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 15px rgba(107, 30, 53, 0.04);
+  border: 1px solid var(--gold);
   transition: transform 0.35s ease, box-shadow 0.35s ease;
   padding-bottom: 1.5rem;
 }
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.06);
+  box-shadow: 0 15px 30px rgba(107, 30, 53, 0.1);
+  background: var(--peach);
 }
 
 /* Image Wrap */
@@ -44,19 +46,19 @@
   text-transform: uppercase;
 }
 .discount-badge { top: 1rem; left: 1rem; background-color: var(--accent); color: #fff; }
-.new-badge { top: 1rem; right: 1rem; background-color: #8da388; color: #fff; }
-.soldout-badge { top: 1rem; right: 1rem; background-color: var(--muted); color: #fff; }
+.new-badge { top: 1rem; right: 1rem; background-color: var(--mint); color: var(--text); }
+.soldout-badge { top: 1rem; right: 1rem; background-color: var(--tan); color: var(--text); }
 
 /* Wishlist Heart */
 .wishlist-btn {
   position: absolute;
   top: 1rem; right: 1rem;
   z-index: 10;
-  background: #fff;
+  background: var(--surface);
   border-radius: 50%;
   width: 32px; height: 32px;
   display: flex; justify-content: center; align-items: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(107, 30, 53, 0.12);
   transition: transform 0.2s ease;
 }
 .wishlist-btn:hover { transform: scale(1.1); }
@@ -79,13 +81,13 @@
   text-align: center;
 }
 .product-card:hover .quick-shop-btn { bottom: 1rem; }
-.quick-shop-btn:hover { background-color: #a3552f; }
+.quick-shop-btn:hover { background-color: #7a3050; }
 
 /* Notify Me (sold out) */
 .btn-add-cart.disabled {
   width: 100%;
-  border: 1px solid #f0edea;
-  background-color: #f0edea;
+  border: 1px solid var(--tan);
+  background-color: #f5eeec;
   color: var(--muted);
   padding: 0.6rem;
   border-radius: 4px;

@@ -22,7 +22,7 @@ React and Vite single-page application for a medical kits storefront with a demo
 ## Admin Demo Login
 
 ```text
-Email: admin@Pharmer.com
+Email: admin@pharmaultimate.com
 Password: admin123
 ```
 

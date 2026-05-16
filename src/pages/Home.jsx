@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
 import ProductCard from '../components/ProductCard';
 import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from '../constants';
+import { getFeaturedProducts, subscribeNewsletter } from '../api/client';
 import './Home.css';
 
 const slides = [
@@ -25,15 +26,6 @@ const slides = [
   },
 ];
 
-const products = [
-  { id: 1, name: 'Complete First Aid Kit', price: 1299, originalPrice: 1799, discount: null, isNew: false, image1: '/images/product-first-aid-kit.svg', image2: '/images/product-emergency-hamper.svg' },
-  { id: 2, name: 'Diagnostic Essentials Kit', price: 999, originalPrice: 1299, discount: 23, isNew: false, image1: '/images/product-diagnostic-kit.svg', image2: '/images/product-home-care-kit.svg' },
-  { id: 3, name: 'Wound Care Components Set', price: 849, originalPrice: 1299, discount: 34, isNew: false, image1: '/images/product-wound-care.svg', image2: '/images/product-first-aid-kit.svg' },
-  { id: 4, name: 'PPE Safety Pack', price: 699, originalPrice: 999, discount: 30, isNew: true, image1: '/images/product-ppe-pack.svg', image2: '/images/product-surgical-tools.svg' },
-  { id: 5, name: 'Emergency Response Hamper', price: 2499, originalPrice: null, discount: null, isNew: false, image1: '/images/product-emergency-hamper.svg', image2: '/images/product-first-aid-kit.svg' },
-  { id: 6, name: 'Medicine Organizer Pack', price: 599, originalPrice: null, discount: null, isNew: false, image1: '/images/product-medicine-pack.svg', image2: '/images/product-home-care-kit.svg' },
-];
-
 const testimonials = [
   { quote: 'The first aid kit is neatly packed and easy to use during rushed moments.', name: 'Priya S., Bangalore' },
   { quote: 'Our clinic restocked wound care components from here and the quality felt consistent.', name: 'Ananya R., Mumbai' },
@@ -42,6 +34,24 @@ const testimonials = [
 
 const Home = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterMsg, setNewsletterMsg] = useState('');
+
+  useEffect(() => {
+    getFeaturedProducts().then(setFeaturedProducts).catch(console.error);
+  }, []);
+
+  const handleNewsletter = async (e) => {
+    e.preventDefault();
+    try {
+      await subscribeNewsletter(newsletterEmail);
+      setNewsletterMsg('Subscribed!');
+      setNewsletterEmail('');
+    } catch (err) {
+      setNewsletterMsg(err.message);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -134,16 +144,15 @@ const Home = () => {
           </div>
 
           <div className="product-grid">
-            {products.map((product) => (
+            {featuredProducts.map((product) => (
               <ProductCard
                 key={product.id}
                 className="fade-up"
                 name={product.name}
                 brandTag={BRAND_NAME}
                 price={product.price}
-                originalPrice={product.originalPrice}
-                discount={product.discount}
-                isNew={product.isNew}
+                originalPrice={product.original_price}
+                isNew={product.is_new}
                 imagePrimary={product.image1}
                 imageSecondary={product.image2}
               />
@@ -217,10 +226,11 @@ const Home = () => {
       <section className="newsletter-section">
         <div className="container text-center fade-up">
           <h2 className="newsletter-title">Get Medical Supply Updates</h2>
-          <form className="newsletter-form-inline">
-            <input type="email" placeholder="Enter your email" required />
+          <form className="newsletter-form-inline" onSubmit={handleNewsletter}>
+            <input type="email" placeholder="Enter your email" required value={newsletterEmail} onChange={(e) => setNewsletterEmail(e.target.value)} />
             <button type="submit" className="btn-dark">Subscribe &rarr;</button>
           </form>
+          {newsletterMsg && <p style={{ marginTop: '0.75rem', color: 'var(--accent)', fontSize: '14px' }}>{newsletterMsg}</p>}
         </div>
       </section>
     </div>

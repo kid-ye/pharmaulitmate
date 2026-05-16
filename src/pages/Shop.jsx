@@ -1,190 +1,8 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { X } from "lucide-react";
 import ProductCard from "../components/ProductCard";
+import { getProducts } from "../api/client";
 import "./Shop.css";
-
-const MOCK_PRODUCTS = [
-  {
-    id: 1,
-    name: "Complete First Aid Kit",
-    category: "Medical Kits",
-    price: 1299,
-    originalPrice: 1799,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-first-aid-kit.svg",
-    image2: "/images/product-emergency-hamper.svg",
-    rating: 4.8,
-    reviews: 47,
-    featured: 10,
-    dateAdded: "2024-01-01",
-  },
-  {
-    id: 2,
-    name: "Home Care Medical Kit",
-    category: "Medical Kits",
-    price: 999,
-    originalPrice: 1299,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-home-care-kit.svg",
-    image2: "/images/product-first-aid-kit.svg",
-    rating: 4.6,
-    reviews: 32,
-    featured: 9,
-    dateAdded: "2024-02-15",
-  },
-  {
-    id: 3,
-    name: "Diagnostic Essentials Kit",
-    category: "Diagnostics",
-    price: 849,
-    originalPrice: 1299,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-diagnostic-kit.svg",
-    image2: "/images/product-home-care-kit.svg",
-    rating: 4.9,
-    reviews: 128,
-    featured: 12,
-    dateAdded: "2023-11-20",
-  },
-  {
-    id: 4,
-    name: "Medicine Organizer Pack",
-    category: "Diagnostics",
-    price: 749,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-medicine-pack.svg",
-    image2: "/images/product-diagnostic-kit.svg",
-    rating: 4.7,
-    reviews: 85,
-    featured: 8,
-    dateAdded: "2024-03-10",
-  },
-  {
-    id: 5,
-    name: "Wound Care Components Set",
-    category: "Wound Care",
-    price: 399,
-    originalPrice: 699,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-wound-care.svg",
-    image2: "/images/product-first-aid-kit.svg",
-    rating: 4.8,
-    reviews: 210,
-    featured: 11,
-    dateAdded: "2023-09-05",
-  },
-  {
-    id: 6,
-    name: "Sterile Dressing Refill Pack",
-    category: "Wound Care",
-    price: 449,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-wound-care.svg",
-    image2: "/images/product-medicine-pack.svg",
-    rating: 4.5,
-    reviews: 18,
-    featured: 7,
-    dateAdded: "2024-04-01",
-  },
-  {
-    id: 7,
-    name: "PPE Safety Pack",
-    category: "PPE",
-    price: 699,
-    originalPrice: 999,
-    isNew: true,
-    isSoldOut: false,
-    image1: "/images/product-ppe-pack.svg",
-    image2: "/images/product-surgical-tools.svg",
-    rating: 5.0,
-    reviews: 5,
-    featured: 15,
-    dateAdded: "2024-05-01",
-  },
-  {
-    id: 8,
-    name: "Emergency Response Hamper",
-    category: "Emergency Kits",
-    price: 2499,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-emergency-hamper.svg",
-    image2: "/images/product-first-aid-kit.svg",
-    rating: 4.9,
-    reviews: 42,
-    featured: 14,
-    dateAdded: "2023-12-10",
-  },
-  {
-    id: 9,
-    name: "Surgical Tools Starter Kit",
-    category: "Clinical Components",
-    price: 1599,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-surgical-tools.svg",
-    image2: "/images/product-diagnostic-kit.svg",
-    rating: 4.7,
-    reviews: 93,
-    featured: 6,
-    dateAdded: "2024-01-20",
-  },
-  {
-    id: 10,
-    name: "Mask and Gloves Refill Set",
-    category: "PPE",
-    price: 299,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-ppe-pack.svg",
-    image2: "/images/product-home-care-kit.svg",
-    rating: 4.6,
-    reviews: 54,
-    featured: 5,
-    dateAdded: "2024-02-28",
-  },
-  {
-    id: 11,
-    name: "Clinic Restock Bundle",
-    category: "Clinical Components",
-    price: 2499,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: true,
-    image1: "/images/about-medical-components.svg",
-    image2: "/images/product-wound-care.svg",
-    rating: 4.9,
-    reviews: 112,
-    featured: 13,
-    dateAdded: "2024-03-05",
-  },
-  {
-    id: 12,
-    name: "Travel Emergency Kit",
-    category: "Emergency Kits",
-    price: 1499,
-    originalPrice: null,
-    isNew: false,
-    isSoldOut: false,
-    image1: "/images/product-emergency-hamper.svg",
-    image2: "/images/product-home-care-kit.svg",
-    rating: 4.8,
-    reviews: 88,
-    featured: 16,
-    dateAdded: "2024-04-15",
-  },
-];
 
 const CATEGORIES = [
   "All",
@@ -197,10 +15,15 @@ const CATEGORIES = [
 ];
 
 const Shop = ({ onAddToCart }) => {
+  const [allProducts, setAllProducts] = useState([]);
   const [activeCategory, setActiveCategory] = useState("All");
   const [sortOrder, setSortOrder] = useState("Featured");
   const [currentPage, setCurrentPage] = useState(1);
   const [wishlist, setWishlist] = useState([]);
+
+  useEffect(() => {
+    getProducts({ limit: 100 }).then((res) => setAllProducts(res.products ?? res)).catch(console.error);
+  }, []);
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -209,9 +32,8 @@ const Shop = ({ onAddToCart }) => {
 
   const ITEMS_PER_PAGE = 9;
 
-  // Filter & Sort Logic
   const filteredProducts = useMemo(() => {
-    let result = MOCK_PRODUCTS;
+    let result = allProducts;
     if (activeCategory !== "All") {
       result = result.filter((p) => p.category === activeCategory);
     }
@@ -219,7 +41,7 @@ const Shop = ({ onAddToCart }) => {
     switch (sortOrder) {
       case "Newest":
         result = [...result].sort(
-          (a, b) => new Date(b.dateAdded) - new Date(a.dateAdded),
+          (a, b) => new Date(b.date_added) - new Date(a.date_added),
         );
         break;
       case "Price: Low–High":
@@ -230,11 +52,11 @@ const Shop = ({ onAddToCart }) => {
         break;
       case "Featured":
       default:
-        result = [...result].sort((a, b) => b.featured - a.featured);
+        result = [...result].sort((a, b) => b.featured_order - a.featured_order);
         break;
     }
     return result;
-  }, [activeCategory, sortOrder]);
+  }, [activeCategory, sortOrder, allProducts]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const currentProducts = filteredProducts.slice(
@@ -268,7 +90,7 @@ const Shop = ({ onAddToCart }) => {
         <div className="container text-center">
           <div className="breadcrumb">Home &rsaquo; Shop</div>
           <h1 className="shop-title">Shop All</h1>
-          <p className="shop-subtext">{MOCK_PRODUCTS.length} products</p>
+          <p className="shop-subtext">{allProducts.length} products</p>
         </div>
       </div>
 
@@ -328,13 +150,6 @@ const Shop = ({ onAddToCart }) => {
           ) : (
             <div className="shop-grid">
               {currentProducts.map((product, index) => {
-                const discountPercent = product.originalPrice
-                  ? Math.round(
-                      ((product.originalPrice - product.price) /
-                        product.originalPrice) *
-                        100,
-                    )
-                  : null;
                 const isWished = wishlist.includes(product.id);
 
                 return (
@@ -345,14 +160,13 @@ const Shop = ({ onAddToCart }) => {
                     name={product.name}
                     brandTag="pharmaultimate"
                     price={product.price}
-                    originalPrice={product.originalPrice}
-                    discount={discountPercent}
-                    isNew={product.isNew}
-                    isSoldOut={product.isSoldOut}
+                    originalPrice={product.original_price}
+                    isNew={product.is_new}
+                    isSoldOut={product.is_sold_out}
                     imagePrimary={product.image1}
                     imageSecondary={product.image2}
                     rating={product.rating}
-                    reviews={product.reviews}
+                    reviews={product.review_count}
                     showWishlist={true}
                     isWished={isWished}
                     onToggleWishlist={() => toggleWishlist(product.id)}
@@ -420,9 +234,9 @@ const Shop = ({ onAddToCart }) => {
                   <span className="price" style={{ fontSize: "24px" }}>
                     Rs.{selectedProduct.price}
                   </span>
-                  {selectedProduct.originalPrice && (
+                  {selectedProduct.original_price && (
                     <span className="price-old">
-                      Rs.{selectedProduct.originalPrice}
+                      Rs.{selectedProduct.original_price}
                     </span>
                   )}
                 </div>
@@ -432,7 +246,7 @@ const Shop = ({ onAddToCart }) => {
                   use.
                 </p>
 
-                {!selectedProduct.isSoldOut && (
+                {!selectedProduct.is_sold_out && (
                   <div className="quantity-selector">
                     <button onClick={() => setQty(Math.max(1, qty - 1))}>
                       &minus;
@@ -442,7 +256,7 @@ const Shop = ({ onAddToCart }) => {
                   </div>
                 )}
 
-                {selectedProduct.isSoldOut ? (
+                {selectedProduct.is_sold_out ? (
                   <button
                     className="btn-primary full-width"
                     style={{ opacity: 0.6 }}
