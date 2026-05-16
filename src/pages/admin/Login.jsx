@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import { ADMIN_EMAIL, BRAND_NAME } from '../../constants';
+import { loginAdmin } from '../../api/client.js';
 import './Login.css';
-
-const ADMIN_PASSWORD = 'admin123';
 
 const Login = ({ onLogin }) => {
   const [email, setEmail] = useState(ADMIN_EMAIL);
@@ -20,21 +19,20 @@ const Login = ({ onLogin }) => {
     return () => document.body.classList.remove('admin-body');
   }, []);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-
-    setTimeout(() => {
-      if (email.trim().toLowerCase() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASSWORD) {
-        setError('');
-        onLogin();
-      } else {
-        setError('Invalid admin email or password.');
-        setLoading(false);
-        setShake(true);
-        setTimeout(() => setShake(false), 500);
-      }
-    }, 600);
+    setError('');
+    try {
+      const data = await loginAdmin(email.trim(), password);
+      localStorage.setItem('pharma-admin-token', data.token);
+      onLogin(data.admin);
+    } catch (err) {
+      setError(err.message || 'Invalid admin email or password.');
+      setLoading(false);
+      setShake(true);
+      setTimeout(() => setShake(false), 500);
+    }
   };
 
   return (

@@ -3,9 +3,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   background:
-    radial-gradient(circle at 18% 18%, rgba(47, 143, 139, 0.16), transparent 28%),
-    radial-gradient(circle at 82% 10%, rgba(61, 127, 194, 0.12), transparent 26%),
-    linear-gradient(135deg, #F5F8F8 0%, #EDF4F4 52%, #F7F0E6 100%);
+    radial-gradient(circle at 18% 18%, rgba(158, 64, 96, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 10%, rgba(45, 106, 79, 0.1), transparent 26%),
+    linear-gradient(135deg, #F7EEE9 0%, #D8ECD5 52%, #F4C8C0 100%);
   color: var(--admin-text);
 }
 
@@ -27,8 +27,8 @@
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba(20, 38, 40, 0.72) 0%,
-    rgba(20, 38, 40, 0.18) 60%,
+    rgba(61, 18, 32, 0.78) 0%,
+    rgba(61, 18, 32, 0.22) 60%,
     transparent 100%
   );
   display: flex;
@@ -114,7 +114,7 @@
 
 .login-input-wrap:focus-within {
   border-color: var(--admin-gold);
-  box-shadow: 0 0 0 3px rgba(47, 143, 139, 0.12);
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
 }
 
 .login-input-wrap input {
@@ -144,7 +144,7 @@
 }
 
 .login-submit:hover:not(:disabled) {
-  background: #287b78;
+  background: #1e4d38;
 }
 
 .login-submit:disabled {
