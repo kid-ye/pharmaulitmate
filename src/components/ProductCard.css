@@ -22,16 +22,12 @@
   width: 100%; height: 100%;
   position: relative;
 }
-.product-card .img-primary,
-.product-card .img-secondary {
+.product-card .img-primary {
   position: absolute;
   top: 0; left: 0; width: 100%; height: 100%;
   object-fit: cover;
   transition: opacity 0.5s ease;
 }
-.product-card .img-secondary { opacity: 0; }
-.product-card:hover .img-secondary { opacity: 1; }
-.product-card:hover .img-primary { opacity: 0; }
 
 /* Badges */
 .badge {
@@ -63,6 +59,59 @@
 .new-badge ~ .wishlist-btn,
 .soldout-badge ~ .wishlist-btn {
   top: 3rem;
+}
+
+/* Carousel Arrows */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 10;
+  color: var(--text);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: background 0.2s, transform 0.2s, opacity 0.2s;
+  opacity: 0;
+}
+.product-card:hover .carousel-arrow {
+  opacity: 1;
+}
+.carousel-arrow:hover {
+  background: #fff;
+  transform: translateY(-50%) scale(1.1);
+}
+.carousel-arrow.left { left: 10px; }
+.carousel-arrow.right { right: 10px; }
+
+/* Carousel Dots */
+.carousel-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  z-index: 10;
+}
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.carousel-dot.active {
+  background: var(--accent);
 }
 
 /* Add to Cart hover button */

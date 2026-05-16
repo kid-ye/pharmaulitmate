@@ -1,4 +1,5 @@
-import { Heart, Star } from 'lucide-react';
+import { useState } from 'react';
+import { Heart, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { BRAND_NAME } from '../constants';
 import './ProductCard.css';
 
@@ -10,8 +11,7 @@ const ProductCard = ({
   discount = null,
   isNew = false,
   isSoldOut = false,
-  imagePrimary,
-  imageSecondary,
+  images = [],
   rating = null,
   reviews = null,
   showWishlist = false,
@@ -21,7 +21,18 @@ const ProductCard = ({
   className = '',
   style = {}
 }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const discountPercent = discount ?? (originalPrice ? Math.round(((originalPrice - price) / originalPrice) * 100) : null);
+
+  const handlePrevImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  };
+
+  const handleNextImage = (e) => {
+    e.stopPropagation();
+    setCurrentImageIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
 
   return (
     <div className={`product-card ${className}`} style={style}>
@@ -37,9 +48,30 @@ const ProductCard = ({
         )}
 
         <div className="product-images">
-          <img src={imagePrimary} alt={name} className="img-primary" />
-          <img src={imageSecondary} alt={name} className="img-secondary" />
+          {images.length > 0 && (
+            <img src={images[currentImageIndex]} alt={name} className="img-primary" />
+          )}
         </div>
+
+        {images.length > 1 && (
+          <>
+            <button className="carousel-arrow left" onClick={handlePrevImage} aria-label="Previous image">
+              <ChevronLeft size={20} />
+            </button>
+            <button className="carousel-arrow right" onClick={handleNextImage} aria-label="Next image">
+              <ChevronRight size={20} />
+            </button>
+            <div className="carousel-dots">
+              {images.map((_, idx) => (
+                <span 
+                  key={idx} 
+                  className={`carousel-dot ${idx === currentImageIndex ? 'active' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                />
+              ))}
+            </div>
+          </>
+        )}
 
         {!isSoldOut && <button className="quick-shop-btn" onClick={onQuickShop}>Add to Cart</button>}
       </div>
