@@ -43,6 +43,9 @@ import {
   deleteProduct,
   featureReview,
   uploadProductImage,
+  srSchedulePickup,
+  srGenerateLabel,
+  srGenerateManifest,
 } from "../../api/client.js";
 import "./Dashboard.css";
 
@@ -541,21 +544,20 @@ const Dashboard = ({ onLogout }) => {
               <th onClick={() => handleSort("created_at")}>
                 Date <ArrowUpDown size={12} />
               </th>
-              <th>Action</th>
+              <th>Status</th>
+              <th>Shipping</th>
             </tr>
           </thead>
           <tbody>
             {getSortedOrders().map((order) => (
               <tr key={order.id}>
-                <td className="mono-text mono-gold">#{order.id}</td>
+                <td className="mono-text mono-gold">#{order.order_ref || order.id}</td>
                 <td>{order.customer_name ?? order.customer_email}</td>
                 <td className="mono-text">
                   Rs.{Number(order.total).toLocaleString()}
                 </td>
                 <td>
-                  <span
-                    className={`status-pill ${getStatusClass(order.status)}`}
-                  >
+                  <span className={`status-pill ${getStatusClass(order.status)}`}>
                     {order.status}
                   </span>
                 </td>
@@ -571,10 +573,8 @@ const Dashboard = ({ onLogout }) => {
                         await updateOrderStatus(order.id, e.target.value);
                         setOrders((prev) =>
                           prev.map((o) =>
-                            o.id === order.id
-                              ? { ...o, status: e.target.value }
-                              : o,
-                          ),
+                            o.id === order.id ? { ...o, status: e.target.value } : o
+                          )
                         );
                         showToast(`Order #${order.id} → ${e.target.value}`);
                       } catch (err) {
@@ -582,16 +582,66 @@ const Dashboard = ({ onLogout }) => {
                       }
                     }}
                   >
-                    {[
-                      "Pending",
-                      "Processing",
-                      "Shipped",
-                      "Delivered",
-                      "Cancelled",
-                    ].map((s) => (
+                    {["Pending", "Processing", "Shipped", "Delivered", "Cancelled"].map((s) => (
                       <option key={s}>{s}</option>
                     ))}
                   </select>
+                </td>
+                <td>
+                  <div className="action-icons" style={{ gap: "6px", flexWrap: "wrap" }}>
+                    {order.sr_shipment_id && !order.awb_code && (
+                      <button
+                        className="icon-action icon-edit"
+                        title="Schedule Pickup"
+                        style={{ fontSize: "11px", padding: "3px 7px", borderRadius: "4px", width: "auto", height: "auto" }}
+                        onClick={async () => {
+                          try {
+                            await srSchedulePickup(order.sr_shipment_id);
+                            showToast(`Pickup scheduled for #${order.order_ref}`);
+                          } catch (err) { showToast(err.message, "error"); }
+                        }}
+                      >Pickup</button>
+                    )}
+                    {order.sr_shipment_id && (
+                      <button
+                        className="icon-action icon-edit"
+                        title="Print Label"
+                        style={{ fontSize: "11px", padding: "3px 7px", borderRadius: "4px", width: "auto", height: "auto" }}
+                        onClick={async () => {
+                          try {
+                            const res = await srGenerateLabel(order.sr_shipment_id);
+                            const url = res.label_url || res.response?.label_url;
+                            if (url) window.open(url, "_blank");
+                            else showToast("Label not ready yet", "error");
+                          } catch (err) { showToast(err.message, "error"); }
+                        }}
+                      >Label</button>
+                    )}
+                    {order.sr_shipment_id && (
+                      <button
+                        className="icon-action icon-edit"
+                        title="Generate Manifest"
+                        style={{ fontSize: "11px", padding: "3px 7px", borderRadius: "4px", width: "auto", height: "auto" }}
+                        onClick={async () => {
+                          try {
+                            const res = await srGenerateManifest(order.sr_shipment_id);
+                            const url = res.manifest_url || res.response?.manifest_url;
+                            if (url) window.open(url, "_blank");
+                            else showToast("Manifest generated");
+                          } catch (err) { showToast(err.message, "error"); }
+                        }}
+                      >Manifest</button>
+                    )}
+                    {order.awb_code && (
+                      <span style={{ fontSize: "11px", color: "var(--admin-muted)" }}
+                        title={`Courier: ${order.courier_name || "—"}`}>
+                        AWB: {order.awb_code}
+                      </span>
+                    )}
+                    {!order.sr_shipment_id && (
+                      <span style={{ fontSize: "11px", color: "var(--admin-muted)" }}>—</span>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

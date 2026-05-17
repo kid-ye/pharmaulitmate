@@ -128,6 +128,23 @@ export const updateOrderStatus = (id, status) =>
     body: JSON.stringify({ status }),
   });
 
+// Shiprocket admin actions
+export const srSchedulePickup = (shipmentId) =>
+  request("/shiprocket/pickup", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [String(shipmentId)] }),
+  });
+export const srGenerateLabel = (shipmentId) =>
+  request("/shiprocket/label", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [String(shipmentId)] }),
+  });
+export const srGenerateManifest = (shipmentId) =>
+  request("/shiprocket/manifests/generate", {
+    method: "POST",
+    body: JSON.stringify({ shipment_id: [String(shipmentId)] }),
+  });
+
 // Customers
 export const getCustomers = () => request("/customers");
 export const getCustomer = (id) => request(`/customers/${id}`);

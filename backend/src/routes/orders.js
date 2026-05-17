@@ -174,6 +174,10 @@ async function pushToShiprocket(order, items, body) {
   const { customer_name, customer_email, shipping_address } = body;
   if (!shipping_address) return;
 
+  const nameParts = customer_name.trim().split(' ');
+  const firstName = nameParts[0];
+  const lastName = nameParts.slice(1).join(' ') || '.';
+
   // Fetch product details since items only carry product_id + qty
   const srItems = await Promise.all(items.map(async (i) => {
     const { rows } = await pool.query(
@@ -188,33 +192,65 @@ async function pushToShiprocket(order, items, body) {
     };
   }));
 
+  const phone = (shipping_address.phone || '').replace(/\D/g, '').slice(-10);
+
   const payload = {
     order_id: order.order_ref,
-    order_date: new Date().toISOString().slice(0, 19).replace('T', ' '),
-    pickup_location: 'Primary',
-    billing_customer_name: customer_name,
+    order_date: new Date().toISOString().slice(0, 10),
+    pickup_location: 'Home',
+    billing_customer_name: firstName,
+    billing_last_name: lastName,
     billing_address: shipping_address.line1,
     billing_address_2: shipping_address.line2 || '',
     billing_city: shipping_address.city,
-    billing_pincode: shipping_address.pincode,
+    billing_pincode: String(shipping_address.pincode),
     billing_state: shipping_address.state,
     billing_country: 'India',
     billing_email: customer_email,
-    billing_phone: shipping_address.phone || '9999999999',
-    shipping_is_billing: true,
+    billing_phone: phone || '9999999999',
+    shipping_is_billing: 1,
     order_items: srItems,
     payment_method: 'Prepaid',
     sub_total: Number(order.subtotal),
     length: 10, breadth: 10, height: 10, weight: 0.5,
   };
 
+  console.log('Shiprocket payload:', JSON.stringify(payload));
+
   const srRes = await shiprocketRequest('/orders/create/adhoc', {
     method: 'POST',
     body: JSON.stringify(payload),
   });
 
+  console.log('Shiprocket full response:', JSON.stringify(srRes));
+
+  const srOrderId = srRes.order_id ?? srRes.payload?.order_id;
+  const srShipmentId = srRes.shipment_id ?? srRes.payload?.shipment_id;
+
+  console.log('Shiprocket order created:', srOrderId, srShipmentId);
+
   await pool.query(
     `UPDATE orders SET sr_order_id=$1, sr_shipment_id=$2 WHERE id=$3`,
-    [String(srRes.order_id), String(srRes.shipment_id), order.id]
+    [String(srOrderId), String(srShipmentId), order.id]
   );
+
+  // Auto-assign AWB (courier_id null = auto-select best courier)
+  try {
+    const awbRes = await shiprocketRequest('/courier/assign/awb', {
+      method: 'POST',
+      body: JSON.stringify({ shipment_id: String(srShipmentId), courier_id: null }),
+    });
+    console.log('AWB full response:', JSON.stringify(awbRes));
+    const awb = awbRes.response?.data?.awb_code || awbRes.awb_code;
+    const courier = awbRes.response?.data?.courier_name || awbRes.courier_name;
+    if (awb) {
+      await pool.query(
+        `UPDATE orders SET awb_code=$1, courier_name=$2 WHERE id=$3`,
+        [String(awb), courier || null, order.id]
+      );
+      console.log('AWB assigned:', awb, courier);
+    }
+  } catch (awbErr) {
+    console.error('AWB assignment failed for order', order.order_ref, awbErr.message);
+  }
 }

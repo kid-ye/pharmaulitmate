@@ -1,4 +1,5 @@
 import { Router } from "express";
+import pool from "../db/pool.js";
 import { requireAdmin } from "../middleware/auth.js";
 import { getToken, shiprocketRequest } from "../services/shiprocket.js";
 
@@ -134,6 +135,36 @@ router.get("/track/:awb", async (req, res) => {
     res.json(data);
   } catch (err) {
     res.status(502).json({ error: err.message });
+  }
+});
+
+// Webhook — POST /api/shiprocket/webhook (called by Shiprocket on status change)
+router.post("/webhook", async (req, res) => {
+  try {
+    const { awb, current_status, shipment_status, courier_name } = req.body;
+    if (!awb) return res.sendStatus(200);
+
+    const statusMap = {
+      'Delivered': 'Delivered',
+      'Shipped': 'Shipped',
+      'In Transit': 'Shipped',
+      'Out For Delivery': 'Shipped',
+      'Cancelled': 'Cancelled',
+      'RTO': 'Cancelled',
+      'RTO Delivered': 'Cancelled',
+    };
+    const mapped = statusMap[current_status] || statusMap[shipment_status];
+
+    if (mapped) {
+      await pool.query(
+        `UPDATE orders SET status=$1 ${courier_name ? ', courier_name=$3' : ''} WHERE awb_code=$2`,
+        courier_name ? [mapped, String(awb), courier_name] : [mapped, String(awb)]
+      );
+    }
+    res.sendStatus(200);
+  } catch (err) {
+    console.error('Webhook error:', err.message);
+    res.sendStatus(200); // always 200 to Shiprocket
   }
 });
 
