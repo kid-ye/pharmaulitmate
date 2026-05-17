@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import ProductCard from "../components/ProductCard";
+import ProductModal from "../components/ProductModal";
 import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from "../constants";
 import { getFeaturedProducts, subscribeNewsletter } from "../api/client";
 import "./Home.css";
@@ -48,10 +48,10 @@ const testimonials = [
   },
 ];
 
-const Home = () => {
-  const navigate = useNavigate();
+const Home = ({ onAddToCart }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMsg, setNewsletterMsg] = useState("");
 
@@ -202,9 +202,8 @@ const Home = () => {
                 price={product.price}
                 originalPrice={product.original_price}
                 isNew={product.is_new}
-                imagePrimary={product.image1}
-                imageSecondary={product.image2}
-                onClick={() => navigate(`/product/${product.id}`)}
+                images={[product.image1, product.image2, product.image3, product.image4, product.image5].filter(Boolean)}
+                onCardClick={() => setSelectedProduct(product)}
               />
             ))}
           </div>
@@ -322,6 +321,13 @@ const Home = () => {
           )}
         </div>
       </section>
+      {selectedProduct && (
+        <ProductModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+          onAddToCart={(p) => onAddToCart && onAddToCart(p, 1)}
+        />
+      )}
     </div>
   );
 };

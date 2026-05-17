@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, Menu, X, Cross, User, LogOut, LayoutDashboard, Bell } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Cross, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from '../constants';
 import './Navbar.css';
 
@@ -8,9 +8,7 @@ const Navbar = ({ cartCount = 0, user = null, onLogout }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
   const userMenuRef = useRef(null);
-  const notificationsRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -23,9 +21,6 @@ const Navbar = ({ cartCount = 0, user = null, onLogout }) => {
     const handleClick = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
         setShowUserMenu(false);
-      }
-      if (notificationsRef.current && !notificationsRef.current.contains(e.target)) {
-        setShowNotifications(false);
       }
     };
     document.addEventListener('mousedown', handleClick);
@@ -90,44 +85,11 @@ const Navbar = ({ cartCount = 0, user = null, onLogout }) => {
           <div className="navbar-actions">
             {user ? (
               <>
-                <div className="notification-wrap" ref={notificationsRef}>
-                  <button
-                    type="button"
-                    className="icon-btn notification-btn"
-                    aria-label="Notifications"
-                    aria-expanded={showNotifications}
-                    onClick={() => {
-                      setShowNotifications((v) => !v);
-                      setShowUserMenu(false);
-                    }}
-                  >
-                    <Bell size={19} />
-                    <span className="notification-badge">1</span>
-                  </button>
-                  {showNotifications && (
-                    <div className="notification-dropdown">
-                      <div className="notification-header">
-                        <h3>Notifications</h3>
-                        <span>1 new</span>
-                      </div>
-                      <div className="notification-item unread">
-                        <span className="notification-dot" aria-hidden="true" />
-                        <div>
-                          <p>Your sample notification is ready.</p>
-                          <small>Track orders, account updates, and offers here.</small>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
                 <div className="user-menu-wrap" ref={userMenuRef}>
                   <button
                     type="button"
                     className="user-pill"
-                    onClick={() => {
-                      setShowUserMenu((v) => !v);
-                      setShowNotifications(false);
-                    }}
+                    onClick={() => setShowUserMenu((v) => !v)}
                   >
                     <User size={15} />
                     <span>{user.name.split(' ')[0]}</span>

@@ -18,8 +18,8 @@ router.post('/', async (req, res) => {
 
     // Upsert user
     const custRes = await client.query(
-      `INSERT INTO users (name, email, city)
-       VALUES ($1, $2, $3)
+      `INSERT INTO users (name, email, city, password_hash)
+       VALUES ($1, $2, $3, '')
        ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name
        RETURNING id`,
       [customer_name, customer_email, city || null]
@@ -172,14 +172,20 @@ export default router;
 // --- Shiprocket push (fire-and-forget) ---
 async function pushToShiprocket(order, items, body) {
   const { customer_name, customer_email, shipping_address } = body;
-  if (!shipping_address) return; // skip if no address provided
+  if (!shipping_address) return;
 
-  // Build order items for Shiprocket
-  const srItems = items.map(i => ({
-    name: i.name,
-    sku: `SKU-${i.product_id}`,
-    units: i.qty,
-    selling_price: i.price,
+  // Fetch product details since items only carry product_id + qty
+  const srItems = await Promise.all(items.map(async (i) => {
+    const { rows } = await pool.query(
+      'SELECT name, sku, price, weight FROM products WHERE id = $1', [i.product_id]
+    );
+    const p = rows[0];
+    return {
+      name: p?.name ?? `Product ${i.product_id}`,
+      sku: p?.sku ?? `SKU-${i.product_id}`,
+      units: i.qty,
+      selling_price: Number(p?.price ?? 0),
+    };
   }));
 
   const payload = {

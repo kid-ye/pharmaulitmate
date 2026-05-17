@@ -23,6 +23,8 @@ services:
       - backend/.env
     ports:
       - "4000:4000"
+    volumes:
+      - uploads:/app/uploads
 
   db-init:
     build: ./backend
@@ -45,3 +47,4 @@ services:
 
 volumes:
   pgdata:
+  uploads:

@@ -1,45 +1,78 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { CURRENCY_SYMBOL } from "../constants";
+import { CURRENCY_SYMBOL, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../constants";
+import { placeOrder } from "../api/client";
 import "./Checkout.css";
 
-const Checkout = ({ cart, onClearCart }) => {
+const Checkout = ({ cart, onClearCart, user }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: "",
-    firstName: "",
-    lastName: "",
-    phone: "",
+    email: user?.email ?? "",
+    firstName: user?.name?.split(" ")[0] ?? "",
+    lastName: user?.name?.split(" ").slice(1).join(" ") ?? "",
+    phone: user?.phone ?? "",
     address: "",
     city: "",
     state: "",
     pincode: "",
-    saveAddress: false,
   });
+  const [placing, setPlacing] = useState(false);
+  const [error, setError] = useState("");
+  const [placed, setPlaced] = useState(false);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const total = subtotal;
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
+  const total = subtotal + shipping;
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((f) => ({
-      ...f,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setFormData((f) => ({ ...f, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implementation for saving order and checkout to come
-    alert(
-      "Order details logged temporarily. Implementation for Shiprocket coming soon.",
-    );
+    setPlacing(true);
+    setError("");
+    try {
+      await placeOrder({
+        customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
+        customer_email: formData.email,
+        city: formData.city,
+        items: cart.map((i) => ({ product_id: i.id, qty: i.qty })),
+        shipping: shipping,
+        shipping_address: {
+          line1: formData.address,
+          city: formData.city,
+          state: formData.state,
+          pincode: formData.pincode,
+          phone: formData.phone,
+        },
+      });
+      onClearCart();
+      setPlaced(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setPlacing(false);
+    }
   };
 
-  if (cart.length === 0) {
+  if (cart.length === 0 && !placed) {
     return (
       <div className="checkout-page empty-checkout">
         <h2>Your cart is empty</h2>
+        <button className="btn-primary" onClick={() => navigate("/shop")}>
+          Continue Shopping
+        </button>
+      </div>
+    );
+  }
+
+  if (placed) {
+    return (
+      <div className="checkout-page empty-checkout">
+        <h2>Order Placed!</h2>
+        <p>Thank you for your order. We'll process and ship it shortly.</p>
         <button className="btn-primary" onClick={() => navigate("/shop")}>
           Continue Shopping
         </button>
@@ -150,8 +183,9 @@ const Checkout = ({ cart, onClearCart }) => {
               </div>
             </div>
 
-            <button type="submit" className="btn-primary full-width submit-btn">
-              Continue to Shipping
+            {error && <p style={{ color: "red", fontSize: "13px", marginBottom: "0.5rem" }}>{error}</p>}
+            <button type="submit" className="btn-primary full-width submit-btn" disabled={placing}>
+              {placing ? "Placing Order…" : `Place Order — ${CURRENCY_SYMBOL}${total.toFixed(2)}`}
             </button>
           </form>
         </div>
@@ -163,7 +197,7 @@ const Checkout = ({ cart, onClearCart }) => {
             {cart.map((item) => (
               <div key={item.id} className="summary-item">
                 <div className="item-image">
-                  <img src={item.image1} alt={item.name} />
+                  <img src={item.image} alt={item.name} />
                   <span className="item-badge">{item.qty}</span>
                 </div>
                 <div className="item-details">
@@ -187,7 +221,7 @@ const Checkout = ({ cart, onClearCart }) => {
             </div>
             <div className="total-row">
               <span>Shipping</span>
-              <span>Calculated at next step</span>
+              <span>{shipping === 0 ? <span className="free-tag">Free</span> : `${CURRENCY_SYMBOL}${shipping}`}</span>
             </div>
             <div className="total-row grand-total">
               <span>Total</span>

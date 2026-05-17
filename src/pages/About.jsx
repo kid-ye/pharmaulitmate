@@ -17,7 +17,7 @@ const founders = [
   },
   {
     image: MHM,
-    name: "Mrs. Mounisha HM",
+    name: "Mrs. Monisha HM",
     heading: "Empowering Mothers Through Knowledge, Care, And Compassion",
     reverse: true,
     content: [

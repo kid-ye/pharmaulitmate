@@ -13,19 +13,22 @@ const ProductCard = ({
   isSoldOut = false,
   imagePrimary,
   imageSecondary,
+  images: imagesProp = null,
   rating = null,
   reviews = null,
   showWishlist = false,
   isWished = false,
   onToggleWishlist,
   onQuickShop,
+  onCardClick,
   className = "",
   onClick,
   style = {},
 }) => {
-  const images = [];
-  if (imagePrimary) images.push(imagePrimary);
-  if (imageSecondary) images.push(imageSecondary);
+  const images = imagesProp ?? [
+    imagePrimary,
+    imageSecondary,
+  ].filter(Boolean);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const discountPercent =
@@ -47,8 +50,8 @@ const ProductCard = ({
   return (
     <div
       className={`product-card ${className}`}
-      style={{ ...style, cursor: onClick ? "pointer" : "default" }}
-      onClick={onClick}
+      style={{ ...style, cursor: (onClick || onCardClick) ? "pointer" : "default" }}
+      onClick={onCardClick ?? onClick}
     >
       <div className="product-image-wrap">
         {discountPercent && (

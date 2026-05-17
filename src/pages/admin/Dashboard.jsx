@@ -9,7 +9,6 @@ import {
   MessageSquare,
   Settings,
   Search,
-  Bell,
   DollarSign,
   ShoppingCart,
   AlertCircle,
@@ -856,10 +855,6 @@ const Dashboard = ({ onLogout }) => {
                 className="admin-search"
               />
             </div>
-            <div className="bell-icon-wrap">
-              <Bell size={20} />
-              <span className="bell-badge">3</span>
-            </div>
             <div className="topbar-avatar">AU</div>
           </div>
         </header>
@@ -1008,66 +1003,6 @@ const Dashboard = ({ onLogout }) => {
                     </div>
                   </div>
 
-                  <div
-                    className="form-group"
-                    style={{ display: "flex", gap: "12px", marginTop: "12px" }}
-                  >
-                    <div style={{ flex: 1 }}>
-                      <label className="form-label">Weight (kg)</label>
-                      <input
-                        type="number"
-                        step="0.1"
-                        className="form-control"
-                        value={formData.weight ?? 0.5}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            weight: Number(e.target.value),
-                          }))
-                        }
-                        placeholder="0.5"
-                      />
-                    </div>
-                    <div style={{ flex: 1 }}>
-                      <label className="form-label">Origin Pincode</label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        value={formData.origin_pincode || "400001"}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            origin_pincode: e.target.value,
-                          }))
-                        }
-                        placeholder="400001"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="form-group" style={{ marginTop: "12px" }}>
-                    <label
-                      className="form-label"
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={formData.is_cod_eligible ?? true}
-                        onChange={(e) =>
-                          setFormData((f) => ({
-                            ...f,
-                            is_cod_eligible: e.target.checked,
-                          }))
-                        }
-                      />
-                      <span>Eligible for Cash on Delivery (COD)</span>
-                    </label>
-                  </div>
                   <div className="form-group">
                     <label className="form-label">
                       Images ({formData.images?.length || 0}/5)

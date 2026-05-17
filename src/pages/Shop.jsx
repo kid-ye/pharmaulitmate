@@ -1,24 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import ProductCard from "../components/ProductCard";
+import ProductModal from "../components/ProductModal";
 import { getProducts } from "../api/client";
 import "./Shop.css";
-
-const CATEGORIES = [
-  "All",
-  "Medical Kits",
-  "Diagnostics",
-  "Wound Care",
-  "PPE",
-  "Emergency Kits",
-  "Clinical Components",
-];
 
 const Shop = ({ onAddToCart }) => {
   const navigate = useNavigate();
   const [allProducts, setAllProducts] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("Featured");
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,9 +29,6 @@ const Shop = ({ onAddToCart }) => {
 
   const filteredProducts = useMemo(() => {
     let result = allProducts;
-    if (activeCategory !== "All") {
-      result = result.filter((p) => p.category === activeCategory);
-    }
     const query = searchQuery.trim().toLowerCase();
     if (query) {
       result = result.filter((p) =>
@@ -71,7 +58,7 @@ const Shop = ({ onAddToCart }) => {
         break;
     }
     return result;
-  }, [activeCategory, searchQuery, sortOrder, allProducts]);
+  }, [searchQuery, sortOrder, allProducts]);
 
   const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
   const currentProducts = filteredProducts.slice(
@@ -112,20 +99,6 @@ const Shop = ({ onAddToCart }) => {
       {/* Filter & Sort Bar */}
       <div className="filter-sort-bar">
         <div className="container filter-sort-inner">
-          <div className="filter-pills">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                className={`filter-pill ${activeCategory === cat ? "active" : ""}`}
-                onClick={() => {
-                  setActiveCategory(cat);
-                  setCurrentPage(1);
-                }}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
           <label className="shop-search">
             <Search size={16} aria-hidden="true" />
             <input
@@ -191,14 +164,13 @@ const Shop = ({ onAddToCart }) => {
                     originalPrice={product.original_price}
                     isNew={product.is_new}
                     isSoldOut={product.is_sold_out}
-                    imagePrimary={product.image1}
-                    imageSecondary={product.image2}
+                    images={[product.image1, product.image2, product.image3, product.image4, product.image5].filter(Boolean)}
                     rating={product.rating}
                     reviews={product.review_count}
                     showWishlist={true}
                     isWished={isWished}
                     onToggleWishlist={() => toggleWishlist(product.id)}
-                    onClick={() => navigate(`/product/${product.id}`)}
+                    onCardClick={() => openQuickShop(product)}
                     onQuickShop={() => openQuickShop(product)}
                   />
                 );
@@ -243,75 +215,12 @@ const Shop = ({ onAddToCart }) => {
         </div>
       </section>
 
-      {/* Quick Shop Modal */}
       {isModalOpen && selectedProduct && (
-        <div className="modal-backdrop" onClick={closeModal}>
-          <div
-            className="modal-content scale-in"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button className="modal-close" onClick={closeModal}>
-              <X size={24} />
-            </button>
-            <div className="modal-grid">
-              <div className="modal-image">
-                <img src={selectedProduct.image1} alt={selectedProduct.name} />
-              </div>
-              <div className="modal-details">
-                <h2 className="modal-title">{selectedProduct.name}</h2>
-                <div className="shop-price-row mb-1">
-                  <span className="price" style={{ fontSize: "24px" }}>
-                    Rs.{selectedProduct.price}
-                  </span>
-                  {selectedProduct.original_price && (
-                    <span className="price-old">
-                      Rs.{selectedProduct.original_price}
-                    </span>
-                  )}
-                </div>
-                <p className="modal-desc">
-                  Curated for practical everyday care. Packed with organized
-                  medical components and quality-checked essentials for reliable
-                  use.
-                </p>
-
-                {!selectedProduct.is_sold_out && (
-                  <div className="quantity-selector">
-                    <button onClick={() => setQty(Math.max(1, qty - 1))}>
-                      &minus;
-                    </button>
-                    <span>{qty}</span>
-                    <button onClick={() => setQty(qty + 1)}>&#43;</button>
-                  </div>
-                )}
-
-                {selectedProduct.is_sold_out ? (
-                  <button
-                    className="btn-primary full-width"
-                    style={{ opacity: 0.6 }}
-                    disabled
-                  >
-                    Notify Me
-                  </button>
-                ) : (
-                  <button
-                    className="btn-primary full-width"
-                    onClick={() => {
-                      onAddToCart(selectedProduct, qty);
-                      closeModal();
-                    }}
-                  >
-                    Add to Cart — Rs.{selectedProduct.price * qty}
-                  </button>
-                )}
-
-                <a href="#" className="modal-link">
-                  View Full Details &rarr;
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProductModal
+          product={selectedProduct}
+          onClose={closeModal}
+          onAddToCart={(p) => onAddToCart(p, 1)}
+        />
       )}
     </div>
   );

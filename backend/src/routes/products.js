@@ -100,48 +100,12 @@ router.get("/:id", async (req, res) => {
 
 // POST /api/products (admin)
 router.post("/", requireAdmin, async (req, res) => {
-  const {
-    name,
-    sku,
-    category,
-    price,
-    original_price,
-    stock,
-    status,
-    is_new,
-    image1,
-    image2,
-    image3,
-    image4,
-    image5,
-    description,
-    weight,
-    origin_pincode,
-    is_cod_eligible,
-  } = req.body;
+  const { name, sku, category, price, original_price, stock, status, is_new, image1, image2, image3, image4, image5, description } = req.body;
   try {
     const { rows } = await pool.query(
-      `INSERT INTO products (name, sku, category, price, original_price, stock, status, is_new, image1, image2, image3, image4, image5, description, weight, origin_pincode, is_cod_eligible)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17) RETURNING *`,
-      [
-        name,
-        sku,
-        category,
-        price,
-        original_price || null,
-        stock,
-        status || "In Stock",
-        is_new || false,
-        image1,
-        image2,
-        image3 || null,
-        image4 || null,
-        image5 || null,
-        description,
-        weight || 0.5,
-        origin_pincode || "400001",
-        is_cod_eligible ?? true,
-      ],
+      `INSERT INTO products (name, sku, category, price, original_price, stock, status, is_new, image1, image2, image3, image4, image5, description)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) RETURNING *`,
+      [name, sku, category, price, original_price || null, stock, status || "In Stock", is_new || false, image1, image2, image3 || null, image4 || null, image5 || null, description],
     );
     res.status(201).json(rows[0]);
   } catch (err) {
@@ -151,28 +115,15 @@ router.post("/", requireAdmin, async (req, res) => {
 
 // PUT /api/products/:id (admin)
 router.put("/:id", requireAdmin, async (req, res) => {
-  const {
-    name,
-    price,
-    original_price,
-    stock,
-    status,
-    is_new,
-    is_sold_out,
-    description,
-    featured_order,
-    weight,
-    origin_pincode,
-    is_cod_eligible,
-  } = req.body;
+  const { name, price, original_price, stock, status, is_new, is_sold_out, description, featured_order } = req.body;
   try {
     const { rows } = await pool.query(
       `UPDATE products SET
-        image1 = COALESCE($1, image1),
-        image2 = COALESCE($2, image2),
-        image3 = COALESCE($3, image3),
-        image4 = COALESCE($4, image4),
-        image5 = COALESCE($5, image5),
+        image1 = $1,
+        image2 = $2,
+        image3 = $3,
+        image4 = $4,
+        image5 = $5,
         name = COALESCE($6, name),
         price = COALESCE($7, price),
         original_price = COALESCE($8, original_price),
@@ -181,31 +132,9 @@ router.put("/:id", requireAdmin, async (req, res) => {
         is_new = COALESCE($11, is_new),
         is_sold_out = COALESCE($12, is_sold_out),
         description = COALESCE($13, description),
-        featured_order = COALESCE($14, featured_order),
-        weight = COALESCE($15, weight),
-        origin_pincode = COALESCE($16, origin_pincode),
-        is_cod_eligible = COALESCE($17, is_cod_eligible)
-       WHERE id = $18 RETURNING *`,
-      [
-        req.body.image1,
-        req.body.image2,
-        req.body.image3,
-        req.body.image4,
-        req.body.image5,
-        name,
-        price,
-        original_price,
-        stock,
-        status,
-        is_new,
-        is_sold_out,
-        description,
-        featured_order,
-        weight,
-        origin_pincode,
-        is_cod_eligible,
-        req.params.id,
-      ],
+        featured_order = COALESCE($14, featured_order)
+       WHERE id = $15 RETURNING *`,
+      [req.body.image1, req.body.image2, req.body.image3, req.body.image4, req.body.image5, name, price, original_price, stock, status, is_new, is_sold_out, description, featured_order, req.params.id],
     );
     if (!rows[0]) return res.status(404).json({ error: "Product not found" });
     res.json(rows[0]);
