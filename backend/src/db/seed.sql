@@ -1,6 +1,6 @@
 -- Admin (password: admin123)
 INSERT INTO admins (email, password_hash, name) VALUES
-('admin@pharmaultimate.com', '$2a$10$N95U77DzGy589j9UR0sH1euOzMeRAQOmfEhM5vShBtjbYzFnZes/q', 'Admin User')
+('admin@WombAndBeyond.com', '$2a$10$N95U77DzGy589j9UR0sH1euOzMeRAQOmfEhM5vShBtjbYzFnZes/q', 'Admin User')
 ON CONFLICT (email) DO NOTHING;
 
 -- Products

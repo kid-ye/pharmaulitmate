@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import ProductCard from "../components/ProductCard";
-import ProductModal from "../components/ProductModal";
-import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from "../constants";
-import { getFeaturedProducts, subscribeNewsletter } from "../api/client";
+import { FREE_SHIPPING_THRESHOLD } from "../constants";
+import { subscribeNewsletter } from "../api/client";
 import "./Home.css";
 
 const slides = [
@@ -50,14 +48,8 @@ const testimonials = [
 
 const Home = ({ onAddToCart }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [featuredProducts, setFeaturedProducts] = useState([]);
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [newsletterEmail, setNewsletterEmail] = useState("");
   const [newsletterMsg, setNewsletterMsg] = useState("");
-
-  useEffect(() => {
-    getFeaturedProducts().then(setFeaturedProducts).catch(console.error);
-  }, []);
 
   const handleNewsletter = async (e) => {
     e.preventDefault();
@@ -183,33 +175,6 @@ const Home = ({ onAddToCart }) => {
         </div>
       </section>
 
-      <section className="section bg-surface">
-        <div className="container">
-          <div className="section-header fade-up">
-            <h2>Featured Products</h2>
-            <a href="/shop" className="text-link text-accent">
-              View All &rarr;
-            </a>
-          </div>
-
-          <div className="product-grid">
-            {featuredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                className="fade-up"
-                name={product.name}
-                brandTag={BRAND_NAME}
-                price={product.price}
-                originalPrice={product.original_price}
-                isNew={product.is_new}
-                images={[product.image1, product.image2, product.image3, product.image4, product.image5].filter(Boolean)}
-                onCardClick={() => setSelectedProduct(product)}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className="self-care-banner">
         <div className="banner-overlay">
           <div className="container text-center fade-up">
@@ -321,13 +286,6 @@ const Home = ({ onAddToCart }) => {
           )}
         </div>
       </section>
-      {selectedProduct && (
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-          onAddToCart={(p) => onAddToCart && onAddToCart(p, 1)}
-        />
-      )}
     </div>
   );
 };

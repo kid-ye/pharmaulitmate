@@ -1,10 +1,11 @@
-# Pharmaultimate Storefront
+# WombAndBeyond Storefront
 
 Full-stack e-commerce application for a medical kits storefront with a live admin dashboard, user accounts, cart, order management, and Shiprocket shipping integration.
 
 ## Stack
 
 **Frontend**
+
 - React 19
 - Vite 8
 - React Router
@@ -13,12 +14,14 @@ Full-stack e-commerce application for a medical kits storefront with a live admi
 - ESLint
 
 **Backend**
+
 - Node.js + Express
 - PostgreSQL 16
 - JWT authentication
 - Multer (file uploads)
 
 **Infrastructure**
+
 - Docker + Docker Compose
 - Nginx (frontend serving + API proxy)
 - Shiprocket API (shipping)
@@ -26,6 +29,7 @@ Full-stack e-commerce application for a medical kits storefront with a live admi
 ## Routes
 
 **Storefront**
+
 - `/` — home page with featured products
 - `/shop` — product listing with filters and quick-add
 - `/about` — store information
@@ -35,16 +39,18 @@ Full-stack e-commerce application for a medical kits storefront with a live admi
 - `/cart` — cart and checkout
 
 **Admin**
+
 - `/admin` — protected admin dashboard
 
 ## Admin Login
 
 ```text
-Email: admin@pharmaultimate.com
+Email: admin@WombAndBeyond.com
 Password: admin123
 ```
 
 Admin authentication uses JWT stored in `localStorage`. The admin dashboard provides:
+
 - Live KPI cards (revenue, orders, products, customers)
 - Monthly revenue and category sales charts
 - Order management with status updates
@@ -55,6 +61,7 @@ Admin authentication uses JWT stored in `localStorage`. The admin dashboard prov
 ## Customer Accounts
 
 Customers can register and log in at `/signin`. Features:
+
 - Profile editing (name, city, phone)
 - Saved addresses (add, edit, delete, set default)
 - Order history with Shiprocket shipment tracking
@@ -64,18 +71,18 @@ Customers can register and log in at `/signin`. Features:
 
 Orders placed on checkout are automatically pushed to Shiprocket. The following backend endpoints are available (admin JWT required):
 
-| Endpoint | Description |
-|---|---|
-| `GET /api/shiprocket/ping` | Test Shiprocket auth |
-| `GET /api/shiprocket/serviceability` | Check courier serviceability |
-| `POST /api/shiprocket/orders` | Create Shiprocket order |
-| `POST /api/shiprocket/awb` | Assign AWB code |
-| `POST /api/shiprocket/pickup` | Generate pickup request |
-| `POST /api/shiprocket/manifests/generate` | Generate manifest |
-| `POST /api/shiprocket/manifests/print` | Print manifest PDF |
-| `POST /api/shiprocket/label` | Generate shipping label PDF |
-| `POST /api/shiprocket/invoice` | Print invoice PDF |
-| `GET /api/shiprocket/track/:awb` | Track shipment by AWB |
+| Endpoint                                  | Description                  |
+| ----------------------------------------- | ---------------------------- |
+| `GET /api/shiprocket/ping`                | Test Shiprocket auth         |
+| `GET /api/shiprocket/serviceability`      | Check courier serviceability |
+| `POST /api/shiprocket/orders`             | Create Shiprocket order      |
+| `POST /api/shiprocket/awb`                | Assign AWB code              |
+| `POST /api/shiprocket/pickup`             | Generate pickup request      |
+| `POST /api/shiprocket/manifests/generate` | Generate manifest            |
+| `POST /api/shiprocket/manifests/print`    | Print manifest PDF           |
+| `POST /api/shiprocket/label`              | Generate shipping label PDF  |
+| `POST /api/shiprocket/invoice`            | Print invoice PDF            |
+| `GET /api/shiprocket/track/:awb`          | Track shipment by AWB        |
 
 ## Setup
 
@@ -92,7 +99,7 @@ The app runs at `http://localhost:5173`
 Create `.env` in the project root:
 
 ````text
-POSTGRES_DB=pharmaultimate
+POSTGRES_DB=WombAndBeyond
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=your_db_password
 ```
@@ -153,3 +160,4 @@ npm run build     # production build
 npm run lint      # ESLint
 npm run preview   # preview production build
 ```
+````

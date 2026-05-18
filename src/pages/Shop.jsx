@@ -159,12 +159,18 @@ const Shop = ({ onAddToCart }) => {
                     className="fade-up-staggered"
                     style={{ animationDelay: `${index * 50}ms` }}
                     name={product.name}
-                    brandTag="pharmaultimate"
+                    brandTag="WombAndBeyond"
                     price={product.price}
                     originalPrice={product.original_price}
                     isNew={product.is_new}
                     isSoldOut={product.is_sold_out}
-                    images={[product.image1, product.image2, product.image3, product.image4, product.image5].filter(Boolean)}
+                    images={[
+                      product.image1,
+                      product.image2,
+                      product.image3,
+                      product.image4,
+                      product.image5,
+                    ].filter(Boolean)}
                     rating={product.rating}
                     reviews={product.review_count}
                     showWishlist={true}
