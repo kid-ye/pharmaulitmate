@@ -1,8 +1,18 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CURRENCY_SYMBOL, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../constants";
-import { placeOrder } from "../api/client";
+import { createPaymentOrder, verifyPayment, placeOrder } from "../api/client";
 import "./Checkout.css";
+
+const loadRazorpay = () =>
+  new Promise((resolve) => {
+    if (window.Razorpay) return resolve(true);
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
 
 const Checkout = ({ cart, onClearCart, user }) => {
   const navigate = useNavigate();
@@ -33,25 +43,71 @@ const Checkout = ({ cart, onClearCart, user }) => {
     e.preventDefault();
     setPlacing(true);
     setError("");
+
     try {
-      await placeOrder({
-        customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
-        customer_email: formData.email,
-        city: formData.city,
-        items: cart.map((i) => ({ product_id: i.id, qty: i.qty })),
-        shipping: shipping,
-        shipping_address: {
-          line1: formData.address,
-          city: formData.city,
-          state: formData.state,
-          pincode: formData.pincode,
-          phone: formData.phone,
-        },
+      const loaded = await loadRazorpay();
+      if (!loaded) throw new Error("Failed to load payment gateway. Check your connection.");
+
+      // Step 1: create Razorpay order on backend
+      const { order_id, amount, currency } = await createPaymentOrder(total);
+
+      // Step 2: open Razorpay popup
+      await new Promise((resolve, reject) => {
+        const rzp = new window.Razorpay({
+          key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+          amount,
+          currency,
+          order_id,
+          name: "Pharmaultimate",
+          description: "Medical Kits Order",
+          prefill: {
+            name: `${formData.firstName} ${formData.lastName}`.trim(),
+            email: formData.email,
+            contact: formData.phone,
+          },
+          theme: { color: "#6b1e35" },
+          handler: async (response) => {
+            try {
+              // Step 3: verify signature on backend
+              await verifyPayment({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              });
+
+              // Step 4: place order in DB + push to Shiprocket
+              await placeOrder({
+                customer_name: `${formData.firstName} ${formData.lastName}`.trim(),
+                customer_email: formData.email,
+                city: formData.city,
+                items: cart.map((i) => ({ product_id: i.id, qty: i.qty })),
+                shipping,
+                shipping_address: {
+                  line1: formData.address,
+                  city: formData.city,
+                  state: formData.state,
+                  pincode: formData.pincode,
+                  phone: formData.phone,
+                },
+                payment_id: response.razorpay_payment_id,
+              });
+
+              onClearCart();
+              resolve();
+            } catch (err) {
+              reject(err);
+            }
+          },
+          modal: {
+            ondismiss: () => reject(new Error("Payment cancelled")),
+          },
+        });
+        rzp.open();
       });
-      onClearCart();
+
       setPlaced(true);
     } catch (err) {
-      setError(err.message);
+      if (err.message !== "Payment cancelled") setError(err.message);
     } finally {
       setPlacing(false);
     }
@@ -185,7 +241,7 @@ const Checkout = ({ cart, onClearCart, user }) => {
 
             {error && <p style={{ color: "red", fontSize: "13px", marginBottom: "0.5rem" }}>{error}</p>}
             <button type="submit" className="btn-primary full-width submit-btn" disabled={placing}>
-              {placing ? "Placing Order…" : `Place Order — ${CURRENCY_SYMBOL}${total.toFixed(2)}`}
+              {placing ? "Opening Payment…" : `Pay ${CURRENCY_SYMBOL}${total.toFixed(2)}`}
             </button>
           </form>
         </div>

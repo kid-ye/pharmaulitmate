@@ -7,18 +7,6 @@
   z-index: 1000;
 }
 
-.announcement-bar {
-  background-color: var(--bg-dark);
-  color: #FDFAF8;
-  padding: 8px 0;
-  font-family: var(--font-body);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  overflow: hidden;
-  white-space: nowrap;
-}
-
 .marquee-container {
   display: flex;
   width: 100%;

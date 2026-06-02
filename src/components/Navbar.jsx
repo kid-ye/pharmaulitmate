@@ -36,24 +36,6 @@ const Navbar = ({ cartCount = 0, user = null, onLogout }) => {
 
   return (
     <header className="header-container">
-      <div className="announcement-bar">
-        <div className="marquee-container">
-          <div className="marquee-content">
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-          </div>
-        </div>
-      </div>
 
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container navbar-inner">

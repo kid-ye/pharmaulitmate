@@ -114,6 +114,18 @@ export const uploadProductImage = async (files) => {
   return data.urls;
 };
 
+// Payment
+export const createPaymentOrder = (amount) =>
+  request("/payment/create-order", {
+    method: "POST",
+    body: JSON.stringify({ amount }),
+  });
+export const verifyPayment = (body) =>
+  request("/payment/verify", {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+
 // Orders
 export const placeOrder = (body) =>
   request("/orders", { method: "POST", body: JSON.stringify(body) });

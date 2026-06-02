@@ -19,6 +19,7 @@ import newsletterRouter from './routes/newsletter.js';
 import wishlistRouter   from './routes/wishlist.js';
 import cartRouter       from './routes/cart.js';
 import shiprocketRouter from './routes/shiprocket.js';
+import paymentRouter   from './routes/payment.js';
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use('/api/newsletter', newsletterRouter);
 app.use('/api/wishlist',   wishlistRouter);
 app.use('/api/cart',       cartRouter);
 app.use('/api/shiprocket', shiprocketRouter);
+app.use('/api/payment',   paymentRouter);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
