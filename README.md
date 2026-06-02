@@ -45,7 +45,7 @@ Full-stack e-commerce application for a medical kits storefront with a live admi
 ## Admin Login
 
 ```text
-Email: admin@WombAndBeyond.com
+Email: admin@pharmaultimate.com
 Password: admin123
 ```
 
