@@ -1,13 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #F7F0E6;
-  --bg-dark: #282828;
-  --text: #1E1B18;
-  --accent: #C2673A;
-  --gold: #BFA06A;
-  --muted: #9A8F85;
-  --surface: #FDFAF6;
+  --bg: #F7EEE9;
+  --bg-dark: #6B1E35;
+  --text: #3D1220;
+  --accent: #9E4060;
+  --gold: #2D6A4F;
+  --muted: #7A6460;
+  --surface: #FDFAF8;
+  --peach: #F4C8C0;
+  --mint: #D8ECD5;
+  --tan: #C8A98A;
+  --brand: #6B1E35;
 
   --font-heading: 'Cormorant Garamond', serif;
   --font-body: 'DM Sans', sans-serif;
@@ -48,7 +52,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 400;
   margin-top: 0;
-  color: var(--text);
+  color: var(--brand);
 }
 
 a, button, input, textarea, .interactive {
@@ -84,7 +88,7 @@ button {
   display: inline-block;
 }
 .btn-primary:hover {
-  background-color: #A3552F;
+  background-color: #7a3050;
 }
 
 .btn-outline {
@@ -99,6 +103,7 @@ button {
 .btn-outline:hover {
   background-color: var(--gold);
   color: #fff;
+  border-color: var(--gold);
 }
 
 /* Layout utilities */
@@ -118,7 +123,7 @@ button {
   color: var(--bg);
 }
 .bg-dark-section h1, .bg-dark-section h2, .bg-dark-section h3, .bg-dark-section h4 {
-  color: var(--bg);
+  color: #FDFAF8;
 }
 
 /* Fade-up animations */

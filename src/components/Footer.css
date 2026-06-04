@@ -1,5 +1,5 @@
 .bg-charcoal {
-  background-color: #1E1B18; /* Charcoal bg requested for footer */
+  background-color: var(--brand);
   color: var(--surface);
 }
 
@@ -26,7 +26,7 @@
 }
 
 .footer-desc {
-  color: #a39b94;
+  color: #e8d0d8;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
   max-width: 320px;
@@ -38,6 +38,9 @@
 }
 
 .footer-socials a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   color: var(--surface);
   font-size: 0.9rem;
   letter-spacing: 0.05em;
@@ -45,7 +48,7 @@
 }
 
 .footer-socials a:hover {
-  color: var(--gold);
+  color: var(--peach);
 }
 
 .footer-col {
@@ -62,16 +65,16 @@
 }
 
 .footer-col a {
-  color: #a39b94;
+  color: #e8d0d8;
   font-size: 0.95rem;
 }
 
 .footer-col a:hover {
-  color: var(--gold);
+  color: var(--peach);
 }
 
 .contact-info {
-  color: #a39b94;
+  color: #e8d0d8;
   font-size: 0.95rem;
   margin: 0;
 }
@@ -79,8 +82,8 @@
 .footer-bottom {
   text-align: center;
   padding: 2rem 0;
-  border-top: 1px solid rgba(253, 250, 246, 0.1);
-  color: #a39b94;
+  border-top: 1px solid rgba(253, 250, 248, 0.15);
+  color: #e8d0d8;
   font-size: 0.9rem;
 }
 

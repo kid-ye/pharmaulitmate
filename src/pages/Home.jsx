@@ -1,47 +1,66 @@
-import { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react';
-import ProductCard from '../components/ProductCard';
-import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from '../constants';
-import './Home.css';
+import { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { FREE_SHIPPING_THRESHOLD } from "../constants";
+import { subscribeNewsletter } from "../api/client";
+import "./Home.css";
 
 const slides = [
   {
-    image: '/images/hero-clinical-kits.svg',
-    tag: 'New Arrival',
-    title: 'Medical Kits for Everyday Care',
-    subtitle: 'Organized first aid, diagnostic, and home care essentials for fast, confident response.',
+    image: "/images/hero-clinical-kits.svg",
+    tag: "New Arrival",
+    title: "Medical Kits for Everyday Care",
+    subtitle:
+      "Organized first aid, diagnostic, and home care essentials for fast, confident response.",
   },
   {
-    image: '/images/hero-diagnostics.svg',
-    tag: 'Diagnostics',
-    title: 'Reliable Components, Ready to Use',
-    subtitle: 'Shop practical thermometers, oximeters, stethoscopes, PPE, and clinical supply packs.',
+    image: "/images/hero-diagnostics.svg",
+    tag: "Diagnostics",
+    title: "Reliable Components, Ready to Use",
+    subtitle:
+      "Shop practical thermometers, oximeters, stethoscopes, PPE, and clinical supply packs.",
   },
   {
-    image: '/images/hero-emergency-care.svg',
-    tag: 'Emergency Preparedness',
-    title: 'Care Kits Built for Urgent Moments',
-    subtitle: 'Compact emergency kits for homes, clinics, workplaces, and travel.',
+    image: "/images/hero-emergency-care.svg",
+    tag: "Emergency Preparedness",
+    title: "Care Kits Built for Urgent Moments",
+    subtitle:
+      "Compact emergency kits for homes, clinics, workplaces, and travel.",
   },
-];
-
-const products = [
-  { id: 1, name: 'Complete First Aid Kit', price: 1299, originalPrice: 1799, discount: null, isNew: false, image1: '/images/product-first-aid-kit.svg', image2: '/images/product-emergency-hamper.svg' },
-  { id: 2, name: 'Diagnostic Essentials Kit', price: 999, originalPrice: 1299, discount: 23, isNew: false, image1: '/images/product-diagnostic-kit.svg', image2: '/images/product-home-care-kit.svg' },
-  { id: 3, name: 'Wound Care Components Set', price: 849, originalPrice: 1299, discount: 34, isNew: false, image1: '/images/product-wound-care.svg', image2: '/images/product-first-aid-kit.svg' },
-  { id: 4, name: 'PPE Safety Pack', price: 699, originalPrice: 999, discount: 30, isNew: true, image1: '/images/product-ppe-pack.svg', image2: '/images/product-surgical-tools.svg' },
-  { id: 5, name: 'Emergency Response Hamper', price: 2499, originalPrice: null, discount: null, isNew: false, image1: '/images/product-emergency-hamper.svg', image2: '/images/product-first-aid-kit.svg' },
-  { id: 6, name: 'Medicine Organizer Pack', price: 599, originalPrice: null, discount: null, isNew: false, image1: '/images/product-medicine-pack.svg', image2: '/images/product-home-care-kit.svg' },
 ];
 
 const testimonials = [
-  { quote: 'The first aid kit is neatly packed and easy to use during rushed moments.', name: 'Priya S., Bangalore' },
-  { quote: 'Our clinic restocked wound care components from here and the quality felt consistent.', name: 'Ananya R., Mumbai' },
-  { quote: 'The emergency hamper made our office medical shelf feel properly prepared.', name: 'Meera K., Delhi' },
+  {
+    quote:
+      "The first aid kit is neatly packed and easy to use during rushed moments.",
+    name: "Priya S., Bangalore",
+  },
+  {
+    quote:
+      "Our clinic restocked wound care components from here and the quality felt consistent.",
+    name: "Ananya R., Mumbai",
+  },
+  {
+    quote:
+      "The emergency hamper made our office medical shelf feel properly prepared.",
+    name: "Meera K., Delhi",
+  },
 ];
 
-const Home = () => {
+const Home = ({ onAddToCart }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletterMsg, setNewsletterMsg] = useState("");
+
+  const handleNewsletter = async (e) => {
+    e.preventDefault();
+    try {
+      await subscribeNewsletter(newsletterEmail);
+      setNewsletterMsg("Subscribed!");
+      setNewsletterEmail("");
+    } catch (err) {
+      setNewsletterMsg(err.message);
+    }
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -50,8 +69,10 @@ const Home = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-  const prevSlide = () => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+  const nextSlide = () =>
+    setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+  const prevSlide = () =>
+    setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
 
   return (
     <div className="home-page">
@@ -59,7 +80,7 @@ const Home = () => {
         {slides.map((slide, index) => (
           <div
             key={slide.title}
-            className={`slide ${index === currentSlide ? 'active' : ''}`}
+            className={`slide ${index === currentSlide ? "active" : ""}`}
             style={{ backgroundImage: `url(${slide.image})` }}
           >
             <div className="slide-overlay"></div>
@@ -77,14 +98,18 @@ const Home = () => {
           </div>
         ))}
 
-        <button className="slider-arrow left" onClick={prevSlide}><ChevronLeft size={32} /></button>
-        <button className="slider-arrow right" onClick={nextSlide}><ChevronRight size={32} /></button>
+        <button className="slider-arrow left" onClick={prevSlide}>
+          <ChevronLeft size={32} />
+        </button>
+        <button className="slider-arrow right" onClick={nextSlide}>
+          <ChevronRight size={32} />
+        </button>
 
         <div className="slider-dots">
           {slides.map((slide, i) => (
             <button
               key={slide.title}
-              className={`dot ${i === currentSlide ? 'active' : ''}`}
+              className={`dot ${i === currentSlide ? "active" : ""}`}
               onClick={() => setCurrentSlide(i)}
             />
           ))}
@@ -93,8 +118,14 @@ const Home = () => {
 
       <div className="gold-marquee">
         <div className="marquee-content-strip">
-          <span>Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast Delivery -</span>
-          <span>Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast Delivery -</span>
+          <span>
+            Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast
+            Delivery -
+          </span>
+          <span>
+            Medical Kits - Diagnostic Components - PPE Packs - Wound Care - Fast
+            Delivery -
+          </span>
         </div>
       </div>
 
@@ -102,52 +133,44 @@ const Home = () => {
         <div className="container">
           <div className="about-grid">
             <div className="about-images fade-up">
-              <img src="/images/about-medical-components.svg" alt="Medical components arranged in a kit" className="img-main" />
+              <img
+                src="/images/about-medical-components.svg"
+                alt="Medical components arranged in a kit"
+                className="img-main"
+              />
             </div>
             <div className="about-text fade-up">
               <span className="eyebrow">Welcome to our</span>
               <h2 className="section-title">
                 Medical Supply Store
-                <svg className="squiggly" viewBox="0 0 200 20" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0 10 Q 25 20, 50 10 T 100 10 T 150 10 T 200 10" fill="transparent" stroke="var(--accent)" strokeWidth="3" />
+                <svg
+                  className="squiggly"
+                  viewBox="0 0 200 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 10 Q 25 20, 50 10 T 100 10 T 150 10 T 200 10"
+                    fill="transparent"
+                    stroke="var(--accent)"
+                    strokeWidth="3"
+                  />
                 </svg>
               </h2>
               <p className="body-text">
-                We curate practical medical kits and components for homes, clinics, workplaces, and travel. Every product is selected to keep essential supplies visible, organized, and ready when care cannot wait.
+                We curate practical medical kits and components for homes,
+                clinics, workplaces, and travel. Every product is selected to
+                keep essential supplies visible, organized, and ready when care
+                cannot wait.
               </p>
               <div className="stat-pills">
                 <span className="stat-pill">Made in India</span>
                 <span className="stat-pill">Clinic Ready</span>
                 <span className="stat-pill">10,000+ Customers</span>
               </div>
-              <a href="/about" className="text-link text-accent">Discover Our Story &rarr;</a>
+              <a href="/about" className="text-link text-accent">
+                Discover Our Story &rarr;
+              </a>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section bg-surface">
-        <div className="container">
-          <div className="section-header fade-up">
-            <h2>Featured Products</h2>
-            <a href="/shop" className="text-link text-accent">View All &rarr;</a>
-          </div>
-
-          <div className="product-grid">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                className="fade-up"
-                name={product.name}
-                brandTag={BRAND_NAME}
-                price={product.price}
-                originalPrice={product.originalPrice}
-                discount={product.discount}
-                isNew={product.isNew}
-                imagePrimary={product.image1}
-                imageSecondary={product.image2}
-              />
-            ))}
           </div>
         </div>
       </section>
@@ -168,13 +191,25 @@ const Home = () => {
               <span className="eyebrow">Prepared Care</span>
               <h2 className="section-title">Prepared Care Starts Here</h2>
               <p className="body-text">
-                Build a supply shelf that is simple to check, quick to restock, and ready for everyday care needs. Choose from kits, components, and safety packs built for practical use.
+                Build a supply shelf that is simple to check, quick to restock,
+                and ready for everyday care needs. Choose from kits, components,
+                and safety packs built for practical use.
               </p>
-              <button className="btn-primary" style={{ marginTop: '1.5rem' }}>Shop Medical Kits &rarr;</button>
+              <button className="btn-primary" style={{ marginTop: "1.5rem" }}>
+                Shop Medical Kits &rarr;
+              </button>
             </div>
             <div className="about-images fade-up">
-              <img src="/images/about-clinical-team.svg" alt="Medical supply kits prepared for delivery" className="img-main" />
-              <img src="/images/product-home-care-kit.svg" alt="Home care medical kit" className="img-offset-left" />
+              <img
+                src="/images/about-clinical-team.svg"
+                alt="Medical supply kits prepared for delivery"
+                className="img-main"
+              />
+              <img
+                src="/images/product-home-care-kit.svg"
+                alt="Home care medical kit"
+                className="img-offset-left"
+              />
             </div>
           </div>
         </div>
@@ -182,7 +217,14 @@ const Home = () => {
 
       <section className="section bg-charcoal-section">
         <div className="container">
-          <h2 className="text-center text-white fade-up" style={{ marginBottom: '3rem', fontSize: '2.5rem', fontFamily: 'var(--font-heading)' }}>
+          <h2
+            className="text-center text-white fade-up"
+            style={{
+              marginBottom: "3rem",
+              fontSize: "2.5rem",
+              fontFamily: "var(--font-heading)",
+            }}
+          >
             What Our Community Says
           </h2>
           <div className="testimonials-grid">
@@ -208,7 +250,9 @@ const Home = () => {
           <div className="trust-grid">
             <div className="trust-item">Pan India Delivery</div>
             <div className="trust-item">Online Support</div>
-            <div className="trust-item">Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</div>
+            <div className="trust-item">
+              Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}
+            </div>
             <div className="trust-item">Made in India</div>
           </div>
         </div>
@@ -217,10 +261,29 @@ const Home = () => {
       <section className="newsletter-section">
         <div className="container text-center fade-up">
           <h2 className="newsletter-title">Get Medical Supply Updates</h2>
-          <form className="newsletter-form-inline">
-            <input type="email" placeholder="Enter your email" required />
-            <button type="submit" className="btn-dark">Subscribe &rarr;</button>
+          <form className="newsletter-form-inline" onSubmit={handleNewsletter}>
+            <input
+              type="email"
+              placeholder="Enter your email"
+              required
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+            />
+            <button type="submit" className="btn-dark">
+              Subscribe &rarr;
+            </button>
           </form>
+          {newsletterMsg && (
+            <p
+              style={{
+                marginTop: "0.75rem",
+                color: "var(--accent)",
+                fontSize: "14px",
+              }}
+            >
+              {newsletterMsg}
+            </p>
+          )}
         </div>
       </section>
     </div>

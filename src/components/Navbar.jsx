@@ -1,21 +1,30 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingBag, Search, Menu, X, Cross, UserCog } from 'lucide-react';
+import { ShoppingBag, Search, Menu, X, Cross, User, LogOut, LayoutDashboard } from 'lucide-react';
 import { BRAND_NAME, FREE_SHIPPING_THRESHOLD } from '../constants';
 import './Navbar.css';
 
-const Navbar = ({ cartCount = 0 }) => {
+const Navbar = ({ cartCount = 0, user = null, onLogout }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
-    };
-
+    const handleScroll = () => setIsScrolled(window.scrollY > 40);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+        setShowUserMenu(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
   }, []);
 
   const navLinks = [
@@ -27,24 +36,6 @@ const Navbar = ({ cartCount = 0 }) => {
 
   return (
     <header className="header-container">
-      <div className="announcement-bar">
-        <div className="marquee-container">
-          <div className="marquee-content">
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-            <span>Free Shipping Above Rs.{FREE_SHIPPING_THRESHOLD}</span>
-            <span>Pan India Delivery</span>
-            <span>Medical Kits</span>
-            <span>Clinic Ready</span>
-          </div>
-        </div>
-      </div>
 
       <nav className={`navbar ${isScrolled ? 'scrolled' : ''}`}>
         <div className="container navbar-inner">
@@ -74,10 +65,36 @@ const Navbar = ({ cartCount = 0 }) => {
           </div>
 
           <div className="navbar-actions">
-            <Link to="/admin" className="admin-login-btn" aria-label="Admin login">
-              <UserCog size={16} />
-              <span>Admin</span>
-            </Link>
+            {user ? (
+              <>
+                <div className="user-menu-wrap" ref={userMenuRef}>
+                  <button
+                    type="button"
+                    className="user-pill"
+                    onClick={() => setShowUserMenu((v) => !v)}
+                  >
+                    <User size={15} />
+                    <span>{user.name.split(' ')[0]}</span>
+                  </button>
+                  {showUserMenu && (
+                    <div className="user-dropdown">
+                      <p className="user-dropdown-email">{user.email}</p>
+                      <Link to="/profile" className="user-dropdown-link" onClick={() => setShowUserMenu(false)}>
+                        <LayoutDashboard size={14} /> My Account
+                      </Link>
+                      <button className="user-dropdown-logout" onClick={() => { onLogout(); setShowUserMenu(false); }}>
+                        <LogOut size={14} /> Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <Link to="/signin" className="admin-login-btn">
+                <User size={15} />
+                <span>Login / Register</span>
+              </Link>
+            )}
             <button className="icon-btn" aria-label="Search">
               <Search size={20} />
             </button>

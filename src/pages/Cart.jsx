@@ -1,9 +1,36 @@
+import { useState } from 'react';
 import { Trash2, ShoppingBag } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { CURRENCY_SYMBOL, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from '../constants';
+import { placeOrder } from '../api/client';
 import './Cart.css';
 
-const Cart = ({ cart, onUpdateQty, onRemove }) => {
+const Cart = ({ cart, onUpdateQty, onRemove, onClearCart, user }) => {
+  const navigate = useNavigate();
+  const [checkoutStatus, setCheckoutStatus] = useState('');
+  const [placing, setPlacing] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [buyer, setBuyer] = useState({ name: user?.name ?? '', email: user?.email ?? '', city: '' });
+
+  const handleCheckout = async (e) => {
+    e.preventDefault();
+    setPlacing(true);
+    try {
+      await placeOrder({
+        customer_name: buyer.name,
+        customer_email: buyer.email,
+        city: buyer.city,
+        items: cart.map((i) => ({ product_id: i.id, quantity: i.qty, unit_price: i.price })),
+      });
+      onClearCart();
+      setCheckoutStatus('Order placed successfully!');
+      setShowForm(false);
+    } catch (err) {
+      setCheckoutStatus(err.message);
+    } finally {
+      setPlacing(false);
+    }
+  };
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const total = subtotal + shipping;
@@ -109,7 +136,9 @@ const Cart = ({ cart, onUpdateQty, onRemove }) => {
               <span>{CURRENCY_SYMBOL}{total.toLocaleString()}</span>
             </div>
 
-            <button className="btn-primary full-width checkout-btn">
+            {checkoutStatus && <p style={{ fontSize: '13px', color: 'var(--accent)', marginTop: '0.5rem', textAlign: 'center' }}>{checkoutStatus}</p>}
+            
+            <button className="btn-primary full-width checkout-btn" onClick={() => navigate('/checkout')}>
               Proceed to Checkout
             </button>
             <Link to="/shop" className="cart-continue">
