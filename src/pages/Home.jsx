@@ -2,30 +2,32 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { FREE_SHIPPING_THRESHOLD } from "../constants";
 import { subscribeNewsletter } from "../api/client";
+import postpartumKitMain from "../assets/postpartum-kit-main.jpg"; // Correct extension (e.g., .jpg or .png)
 import "./Home.css";
 
 const slides = [
   {
-    image: "/images/hero-clinical-kits.svg",
+    image: new URL("../assets/postpartum-kit-box.jpg", import.meta.url).href,
     tag: "New Arrival",
     title: "Medical Kits for Everyday Care",
     subtitle:
       "Organized first aid, diagnostic, and home care essentials for fast, confident response.",
   },
-  {
-    image: "/images/hero-diagnostics.svg",
-    tag: "Diagnostics",
-    title: "Reliable Components, Ready to Use",
-    subtitle:
-      "Shop practical thermometers, oximeters, stethoscopes, PPE, and clinical supply packs.",
-  },
-  {
-    image: "/images/hero-emergency-care.svg",
-    tag: "Emergency Preparedness",
-    title: "Care Kits Built for Urgent Moments",
-    subtitle:
-      "Compact emergency kits for homes, clinics, workplaces, and travel.",
-  },
+  // ,
+  // {
+  //   image: "/images/hero-diagnostics.svg",
+  //   tag: "Diagnostics",
+  //   title: "Reliable Components, Ready to Use",
+  //   subtitle:
+  //     "Shop practical thermometers, oximeters, stethoscopes, PPE, and clinical supply packs.",
+  // },
+  // {
+  //   image: "/images/hero-emergency-care.svg",
+  //   tag: "Emergency Preparedness",
+  //   title: "Care Kits Built for Urgent Moments",
+  //   subtitle:
+  //     "Compact emergency kits for homes, clinics, workplaces, and travel.",
+  // },
 ];
 
 const testimonials = [
@@ -134,7 +136,7 @@ const Home = ({ onAddToCart }) => {
           <div className="about-grid">
             <div className="about-images fade-up">
               <img
-                src="/images/about-medical-components.svg"
+                src={postpartumKitMain}
                 alt="Medical components arranged in a kit"
                 className="img-main"
               />
@@ -201,15 +203,18 @@ const Home = ({ onAddToCart }) => {
             </div>
             <div className="about-images fade-up">
               <img
-                src="/images/about-clinical-team.svg"
+                src={
+                  new URL("../assets/postpartum-kit-main.jpg", import.meta.url)
+                    .href
+                }
                 alt="Medical supply kits prepared for delivery"
                 className="img-main"
               />
-              <img
+              {/* <img
                 src="/images/product-home-care-kit.svg"
                 alt="Home care medical kit"
                 className="img-offset-left"
-              />
+              /> */}
             </div>
           </div>
         </div>
