@@ -11,7 +11,7 @@ const headers = (extra = {}) => ({
 const sessionId = () => {
   let sid = localStorage.getItem("pharma-session-id");
   if (!sid) {
-    sid = crypto.randomUUID();
+    sid = crypto.randomUUID?.() ?? Math.random().toString(36).slice(2) + Date.now().toString(36);
     localStorage.setItem("pharma-session-id", sid);
   }
   return sid;
