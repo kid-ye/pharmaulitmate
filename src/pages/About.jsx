@@ -29,7 +29,7 @@ const founders = [
   },
   {
     image: drVV,
-    name: "Ms. Varsha Manjunath",
+    name: "Dr. Varsha Manjunath",
     heading: "Compassionate Healthcare With Energy, Creativity, And Purpose",
     reverse: false,
     content: [
