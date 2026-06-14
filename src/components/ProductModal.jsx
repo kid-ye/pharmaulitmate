@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { X, ChevronLeft, ChevronRight, Star, ShoppingCart, Check, ShieldCheck, Truck } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { X, ChevronLeft, ChevronRight, Star, ShoppingCart, Check, ShieldCheck, Truck, ExternalLink } from "lucide-react";
 import { BRAND_NAME, CURRENCY_SYMBOL } from "../constants";
 import "./ProductModal.css";
 
 const ProductModal = ({ product, onClose, onAddToCart }) => {
+  const navigate = useNavigate();
   const [currentImage, setCurrentImage] = useState(0);
 
   const images = [
@@ -110,6 +112,13 @@ const ProductModal = ({ product, onClose, onAddToCart }) => {
                 <ShoppingCart size={18} /> Add to Cart
               </button>
             )}
+
+            <button
+              className="pmodal-view-details"
+              onClick={() => { navigate(`/product/${product.id}`); onClose(); }}
+            >
+              View Full Details & Reviews <ExternalLink size={16} />
+            </button>
           </div>
         </div>
       </div>

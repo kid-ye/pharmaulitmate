@@ -234,6 +234,8 @@ const Dashboard = ({ onLogout }) => {
             price: product.price,
             status: product.status,
             description: product.description || "",
+            weight: product.weight ?? 0.5,
+            origin_pincode: product.origin_pincode ?? "400001",
             images: [
               product.image1,
               product.image2,
@@ -250,6 +252,8 @@ const Dashboard = ({ onLogout }) => {
             price: 0,
             status: "In Stock",
             description: "",
+            weight: 0.5,
+            origin_pincode: "400001",
             images: [],
           },
     );
@@ -1013,6 +1017,43 @@ const Dashboard = ({ onLogout }) => {
                       }
                       placeholder="Short description..."
                     />
+                  </div>
+                  <div
+                    className="form-group"
+                    style={{ display: "flex", gap: "12px" }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <label className="form-label">Weight (kg)</label>
+                      <input
+                        type="number"
+                        step="0.1"
+                        className="form-control"
+                        value={formData.weight ?? 0.5}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            weight: Number(e.target.value),
+                          }))
+                        }
+                        placeholder="0.5"
+                      />
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <label className="form-label">Origin Pincode</label>
+                      <input
+                        type="text"
+                        maxLength="6"
+                        className="form-control"
+                        value={formData.origin_pincode ?? "400001"}
+                        onChange={(e) =>
+                          setFormData((f) => ({
+                            ...f,
+                            origin_pincode: e.target.value,
+                          }))
+                        }
+                        placeholder="400001"
+                      />
+                    </div>
                   </div>
                 </div>
                 <div style={{ flex: 1, minWidth: "220px" }}>

@@ -157,6 +157,13 @@ export const srGenerateManifest = (shipmentId) =>
     body: JSON.stringify({ shipment_id: [String(shipmentId)] }),
   });
 
+// Calculate shipping cost
+export const calculateShipping = (delivery_postcode, items) =>
+  request("/shiprocket/calculate-shipping", {
+    method: "POST",
+    body: JSON.stringify({ delivery_postcode, items }),
+  });
+
 // Customers
 export const getCustomers = () => request("/customers");
 export const getCustomer = (id) => request(`/customers/${id}`);

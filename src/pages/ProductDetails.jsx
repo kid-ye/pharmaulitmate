@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getProduct, checkServiceability } from "../api/client";
+import { getProduct, checkServiceability, getReviews, submitReview } from "../api/client";
 import { CURRENCY_SYMBOL } from "../constants";
 import {
   Minus,
@@ -10,6 +10,7 @@ import {
   ShieldCheck,
   Truck,
   MapPin,
+  Star,
 } from "lucide-react";
 import "./ProductDetails.css";
 
@@ -27,13 +28,22 @@ const ProductDetails = ({ onAddToCart }) => {
   const [checkingPincode, setCheckingPincode] = useState(false);
   const [deliveryResult, setDeliveryResult] = useState(null);
 
+  // Reviews
+  const [reviews, setReviews] = useState([]);
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewForm, setReviewForm] = useState({ name: "", rating: 5, text: "" });
+  const [submittingReview, setSubmittingReview] = useState(false);
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const data = await getProduct(id);
-        // backend might return { product: {...} } or just the product
-        setProduct(data.product || data);
+        const [productData, reviewsData] = await Promise.all([
+          getProduct(id),
+          getReviews(id)
+        ]);
+        setProduct(productData.product || productData);
+        setReviews(reviewsData || []);
         setLoading(false);
       } catch (err) {
         setError("Failed to load product details.");
@@ -101,6 +111,30 @@ const ProductDetails = ({ onAddToCart }) => {
       });
     } finally {
       setCheckingPincode(false);
+    }
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!reviewForm.name.trim() || !reviewForm.text.trim()) return;
+    setSubmittingReview(true);
+    try {
+      const newReview = await submitReview({
+        product_id: product.id,
+        customer_name: reviewForm.name,
+        rating: reviewForm.rating,
+        text: reviewForm.text,
+      });
+      setReviews([newReview, ...reviews]);
+      setReviewForm({ name: "", rating: 5, text: "" });
+      setShowReviewForm(false);
+      // Refresh product to update rating
+      const updated = await getProduct(id);
+      setProduct(updated.product || updated);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setSubmittingReview(false);
     }
   };
 
@@ -271,6 +305,99 @@ const ProductDetails = ({ onAddToCart }) => {
                 <ShoppingCart size={18} /> Add to Cart
               </button>
             </div>
+          )}
+        </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="reviews-section">
+        <div className="reviews-header">
+          <h2>Customer Reviews</h2>
+          <div className="reviews-summary">
+            <div className="rating-display">
+              <Star size={24} fill="#f59e0b" color="#f59e0b" />
+              <span className="rating-value">{product.rating || 0}</span>
+              <span className="rating-count">({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})</span>
+            </div>
+            <button className="btn-outline" onClick={() => setShowReviewForm(!showReviewForm)}>
+              {showReviewForm ? 'Cancel' : 'Write a Review'}
+            </button>
+          </div>
+        </div>
+
+        {showReviewForm && (
+          <form className="review-form" onSubmit={handleSubmitReview}>
+            <div className="form-group">
+              <label>Your Name</label>
+              <input
+                type="text"
+                value={reviewForm.name}
+                onChange={(e) => setReviewForm({ ...reviewForm, name: e.target.value })}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Rating</label>
+              <div className="star-selector">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    size={32}
+                    fill={star <= reviewForm.rating ? "#f59e0b" : "none"}
+                    color={star <= reviewForm.rating ? "#f59e0b" : "#d1d5db"}
+                    onClick={() => setReviewForm({ ...reviewForm, rating: star })}
+                    style={{ cursor: "pointer" }}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="form-group">
+              <label>Your Review</label>
+              <textarea
+                value={reviewForm.text}
+                onChange={(e) => setReviewForm({ ...reviewForm, text: e.target.value })}
+                rows={4}
+                required
+              />
+            </div>
+            <button type="submit" className="btn" disabled={submittingReview}>
+              {submittingReview ? 'Submitting...' : 'Submit Review'}
+            </button>
+          </form>
+        )}
+
+        <div className="reviews-list">
+          {reviews.length === 0 ? (
+            <p className="no-reviews">No reviews yet. Be the first to review this product!</p>
+          ) : (
+            reviews
+              .sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0))
+              .map((review) => (
+                <div key={review.id} className={`review-card ${review.is_featured ? 'featured' : ''}`}>
+                  {review.is_featured && <span className="featured-badge">Featured</span>}
+                  <div className="review-header">
+                    <div className="review-author">{review.customer_name}</div>
+                    <div className="review-rating">
+                      {[...Array(5)].map((_, i) => (
+                        <Star
+                          key={i}
+                          size={16}
+                          fill={i < review.rating ? "#f59e0b" : "none"}
+                          color={i < review.rating ? "#f59e0b" : "#d1d5db"}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  <p className="review-text">{review.text}</p>
+                  <span className="review-date">
+                    {new Date(review.created_at).toLocaleDateString('en-IN', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </span>
+                </div>
+              ))
           )}
         </div>
       </div>

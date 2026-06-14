@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CURRENCY_SYMBOL, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from "../constants";
-import { createPaymentOrder, verifyPayment, placeOrder } from "../api/client";
+import { CURRENCY_SYMBOL } from "../constants";
+import { createPaymentOrder, verifyPayment, placeOrder, calculateShipping } from "../api/client";
 import "./Checkout.css";
 
 const loadRazorpay = () =>
@@ -29,15 +29,59 @@ const Checkout = ({ cart, onClearCart, user }) => {
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState("");
   const [placed, setPlaced] = useState(false);
+  const [shipping, setShipping] = useState(null);
+  const [loadingShipping, setLoadingShipping] = useState(false);
+  const [courierInfo, setCourierInfo] = useState(null);
 
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-  const total = subtotal + shipping;
+  const total = subtotal + (shipping || 0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((f) => ({ ...f, [name]: value }));
+    
+    // Reset shipping when pincode changes
+    if (name === 'pincode') {
+      setShipping(null);
+      setCourierInfo(null);
+    }
   };
+
+  // Fetch shipping cost when pincode is complete
+  useEffect(() => {
+    const fetchShipping = async () => {
+      if (formData.pincode?.length === 6 && cart.length > 0) {
+        setLoadingShipping(true);
+        setError("");
+        try {
+          const result = await calculateShipping(
+            formData.pincode,
+            cart.map(item => ({ product_id: item.id, qty: item.qty }))
+          );
+          
+          if (result.success) {
+            setShipping(result.shipping_cost);
+            setCourierInfo({
+              name: result.courier_name,
+              estimated_delivery: result.estimated_delivery,
+              weight: result.total_weight
+            });
+          } else {
+            setError(result.error || 'Shipping not available');
+            setShipping(null);
+          }
+        } catch (err) {
+          setError('Failed to calculate shipping');
+          setShipping(null);
+        } finally {
+          setLoadingShipping(false);
+        }
+      }
+    };
+
+    const timer = setTimeout(fetchShipping, 500);
+    return () => clearTimeout(timer);
+  }, [formData.pincode, cart]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -226,6 +270,30 @@ const Checkout = ({ cart, onClearCart, user }) => {
                 />
               </div>
 
+              {loadingShipping && formData.pincode?.length === 6 && (
+                <p style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '0.5rem' }}>
+                  Calculating shipping cost...
+                </p>
+              )}
+
+              {courierInfo && (
+                <div style={{ 
+                  background: 'var(--surface)', 
+                  padding: '0.75rem', 
+                  borderRadius: '6px',
+                  fontSize: '13px',
+                  marginTop: '0.5rem'
+                }}>
+                  <p style={{ margin: '0 0 0.25rem 0', fontWeight: 600 }}>Shipping via {courierInfo.name}</p>
+                  <p style={{ margin: '0', color: 'var(--muted)' }}>
+                    {courierInfo.estimated_delivery ? (
+                      <>Est. delivery: {courierInfo.estimated_delivery} • </>
+                    ) : null}
+                    Weight: {courierInfo.weight}kg
+                  </p>
+                </div>
+              )}
+
               <div className="checkbox-group">
                 <label>
                   <input
@@ -240,8 +308,12 @@ const Checkout = ({ cart, onClearCart, user }) => {
             </div>
 
             {error && <p style={{ color: "red", fontSize: "13px", marginBottom: "0.5rem" }}>{error}</p>}
-            <button type="submit" className="btn-primary full-width submit-btn" disabled={placing}>
-              {placing ? "Opening Payment…" : `Pay ${CURRENCY_SYMBOL}${total.toFixed(2)}`}
+            <button 
+              type="submit" 
+              className="btn-primary full-width submit-btn" 
+              disabled={placing || loadingShipping || shipping === null}
+            >
+              {placing ? "Opening Payment…" : shipping === null ? "Enter pincode to calculate shipping" : `Pay ${CURRENCY_SYMBOL}${total.toFixed(2)}`}
             </button>
           </form>
         </div>
@@ -277,13 +349,24 @@ const Checkout = ({ cart, onClearCart, user }) => {
             </div>
             <div className="total-row">
               <span>Shipping</span>
-              <span>{shipping === 0 ? <span className="free-tag">Free</span> : `${CURRENCY_SYMBOL}${shipping}`}</span>
+              <span>
+                {loadingShipping ? (
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>Calculating...</span>
+                ) : shipping === null ? (
+                  <span style={{ fontSize: '12px', color: 'var(--muted)' }}>Enter pincode</span>
+                ) : (
+                  `${CURRENCY_SYMBOL}${shipping.toFixed(2)}`
+                )}
+              </span>
             </div>
             <div className="total-row grand-total">
               <span>Total</span>
               <span>
-                {CURRENCY_SYMBOL}
-                {total.toFixed(2)}
+                {shipping === null ? (
+                  <span style={{ fontSize: '12px' }}>TBD</span>
+                ) : (
+                  `${CURRENCY_SYMBOL}${total.toFixed(2)}`
+                )}
               </span>
             </div>
           </div>

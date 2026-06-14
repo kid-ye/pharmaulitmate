@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Trash2, ShoppingBag } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { CURRENCY_SYMBOL, FREE_SHIPPING_THRESHOLD, SHIPPING_FEE } from '../constants';
+import { CURRENCY_SYMBOL } from '../constants';
 import { placeOrder } from '../api/client';
 import './Cart.css';
 
@@ -32,8 +32,6 @@ const Cart = ({ cart, onUpdateQty, onRemove, onClearCart, user }) => {
     }
   };
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
-  const total = subtotal + shipping;
 
   if (cart.length === 0) {
     return (
@@ -122,18 +120,16 @@ const Cart = ({ cart, onUpdateQty, onRemove, onClearCart, user }) => {
               </div>
               <div className="summary-line">
                 <span>Shipping</span>
-                <span>{shipping === 0 ? <span className="free-tag">Free</span> : `${CURRENCY_SYMBOL}${shipping}`}</span>
+                <span style={{ fontSize: '13px', color: 'var(--muted)' }}>Calculated at checkout</span>
               </div>
-              {shipping > 0 && (
-                <p className="shipping-nudge">
-                  Add {CURRENCY_SYMBOL}{(FREE_SHIPPING_THRESHOLD - subtotal).toLocaleString()} more for free shipping
-                </p>
-              )}
+              <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '0.5rem' }}>
+                Shipping cost based on your pincode via courier partner
+              </p>
             </div>
 
             <div className="summary-total">
-              <span>Total</span>
-              <span>{CURRENCY_SYMBOL}{total.toLocaleString()}</span>
+              <span>Subtotal</span>
+              <span>{CURRENCY_SYMBOL}{subtotal.toLocaleString()}</span>
             </div>
 
             {checkoutStatus && <p style={{ fontSize: '13px', color: 'var(--accent)', marginTop: '0.5rem', textAlign: 'center' }}>{checkoutStatus}</p>}

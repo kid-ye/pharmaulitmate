@@ -27,6 +27,61 @@ router.get("/serviceability", async (req, res) => {
   }
 });
 
+// Calculate shipping for cart
+// POST /api/shiprocket/calculate-shipping
+router.post("/calculate-shipping", async (req, res) => {
+  try {
+    const { delivery_postcode, items } = req.body;
+    if (!delivery_postcode || !items?.length) {
+      return res.status(400).json({ error: 'delivery_postcode and items required' });
+    }
+
+    // Fetch products to get weight and origin pincode
+    const productIds = items.map(i => i.product_id);
+    const { rows } = await pool.query(
+      'SELECT id, weight, origin_pincode FROM products WHERE id = ANY($1)',
+      [productIds]
+    );
+
+    // Calculate total weight
+    let totalWeight = 0;
+    for (const item of items) {
+      const product = rows.find(p => p.id === item.product_id);
+      if (product) {
+        totalWeight += (Number(product.weight) || 0.5) * (item.qty || 1);
+      }
+    }
+
+    // Use first product's origin or default
+    const pickupPostcode = rows[0]?.origin_pincode || '400001';
+
+    // Call Shiprocket serviceability API
+    const data = await shiprocketRequest(
+      `/courier/serviceability/?pickup_postcode=${pickupPostcode}&delivery_postcode=${delivery_postcode}&weight=${totalWeight}&cod=0`
+    );
+
+    if (data.status === 200 && data.data?.available_courier_companies?.length > 0) {
+      // Find cheapest courier
+      const couriers = data.data.available_courier_companies;
+      const cheapest = couriers.reduce((min, c) => 
+        Number(c.rate) < Number(min.rate) ? c : min
+      );
+
+      res.json({
+        success: true,
+        shipping_cost: Number(cheapest.rate),
+        courier_name: cheapest.courier_name,
+        estimated_delivery: cheapest.estimated_delivery_date,
+        total_weight: totalWeight
+      });
+    } else {
+      res.json({ success: false, error: 'Shipping not available to this pincode' });
+    }
+  } catch (err) {
+    res.status(502).json({ error: err.message });
+  }
+});
+
 // Step 4 — Create order
 // POST /api/shiprocket/orders
 router.post("/orders", requireAdmin, async (req, res) => {
